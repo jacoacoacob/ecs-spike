@@ -1,4 +1,4 @@
-import type { Rect, Circle } from "./component/geometry";
+import type { Rect, Circle } from "../component/geometry";
 
 type Shape = Rect | Circle;
 

@@ -1,4 +1,4 @@
-import type { IComponent } from "../types";
+import type { IComponent } from "../lib/types";
 
 type Style = IComponent<"style", {
     fillStyle: string;

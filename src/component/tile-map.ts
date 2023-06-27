@@ -1,4 +1,4 @@
-import { IComponent } from "../types";
+import { IComponent } from "../lib/types";
 
 type TileMap = IComponent<"tileMap", {
     rows: number;

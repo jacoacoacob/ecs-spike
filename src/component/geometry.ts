@@ -1,4 +1,4 @@
-import type { IComponent } from "../types";
+import type { IComponent } from "../lib/types";
 
 interface Rect {
     kind: "rect";

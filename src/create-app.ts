@@ -1,12 +1,12 @@
-import { Entity } from "../entities";
-import { IAppState, Selector, System } from "./types";
+import { Entity } from "./entity";
+import { Selector } from "./selector/types";
+import type { System } from "./system/types";
 
 
 function createApp(canvas: HTMLCanvasElement) {
     const _onLoad: (() => void)[] = [];
     const _schedule: (() => void)[] = [];
     const _entities: Record<string, Entity> = {};
-    const _state: Record<string, IAppState> = {};
 
     const canvasCtx = canvas.getContext("2d") as CanvasRenderingContext2D;
 
@@ -14,6 +14,7 @@ function createApp(canvas: HTMLCanvasElement) {
         _onLoad.push(() => system({
             query,
             canvasCtx,
+            spawn,
         }));
     }
 
@@ -21,10 +22,11 @@ function createApp(canvas: HTMLCanvasElement) {
         _schedule.push(() => system({
             query,
             canvasCtx,
+            spawn,
         }));
     }
 
-    function addEntity(entity: Entity) {
+    function spawn(entity: Entity) {
         _entities[entity.id] = entity;
     }
 
@@ -45,7 +47,7 @@ function createApp(canvas: HTMLCanvasElement) {
     function run() {
         while (_onLoad.length) {
             const system = _onLoad.shift() as System;
-            system({ canvasCtx, query });
+            system({ canvasCtx, query, spawn });
         }
         for (let i = 0; i < _schedule.length; i++) {
             _schedule[i]();
@@ -60,8 +62,6 @@ function createApp(canvas: HTMLCanvasElement) {
     return {
         addStartupSystem,
         addSystem,
-        addEntity,
-        query,
         run,
         stop,
     };

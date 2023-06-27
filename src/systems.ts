@@ -1,13 +1,13 @@
-import { Entity, Sprite, Tile } from "./entities";
-import { Circle, Rect } from "./lib/component/geometry";
-import { selectByCoords, selectSprites, selectTiles } from "./selectors";
+import { selectByCoords, selectSprites, selectTiles } from "./selector";
+import type { Sprite, Tile } from "./entity";
+import type { Circle, Rect } from "./component/geometry";
 import type { SystemParams } from "./lib/types";
 
 
 function setupDragAndDrop({ canvasCtx, query }: SystemParams) {
     const canvas = canvasCtx.canvas;
 
-    let clickedEntities: Entity[] = [];
+    let clickedEntities: (Sprite | Tile)[] = [];
 
     canvas.addEventListener("mousedown", onMousedown);
     canvas.addEventListener("mouseup", onMouseup);
@@ -21,7 +21,7 @@ function setupDragAndDrop({ canvasCtx, query }: SystemParams) {
     }
 
     function onMousedown(ev: MouseEvent) {
-        clickedEntities = query(selectByCoords(ev.offsetX, ev.offsetY));
+        clickedEntities = query(selectByCoords(ev.offsetX, ev.offsetY)) as (Sprite | Tile)[];
         canvas.addEventListener("mousemove", onMousemove);
     }
 

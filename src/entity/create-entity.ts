@@ -1,4 +1,4 @@
-import type { Component } from "./component";
+import type { Component } from "../component";
 
 interface IEntity<Kind extends string, Comp extends Component> {
     kind: Kind;
@@ -33,4 +33,3 @@ function createEntity<Kind extends string, Comp extends Component>({
 }
 
 export { createEntity };
-export type { IEntity };
