@@ -1,12 +1,6 @@
-import type { Camera, Shape, Style } from "./component";
+import type { Component } from "./component";
 
-type Components = (
-    Camera |
-    Shape |
-    Style
-);
-
-interface Entity<Kind extends string, Comp extends Components> {
+interface IEntity<Kind extends string, Comp extends Component> {
     kind: Kind;
     id: string;
     components: {
@@ -14,29 +8,29 @@ interface Entity<Kind extends string, Comp extends Components> {
     };
 }
 
-interface EntityOptions<Kind extends string, Comp extends Components> {
+interface EntityOptions<Kind extends string, Comp extends Component> {
     kind: Kind;
     id: string;
     components: Comp[];
 }
 
-function createEntity<Kind extends string, Comp extends Components>({
+function createEntity<Kind extends string, Comp extends Component>({
     kind,
     id,
     components
-}: EntityOptions<Kind, Comp>): Entity<Kind, Comp> {
+}: EntityOptions<Kind, Comp>): IEntity<Kind, Comp> {
     return {
         kind,
         id,
         components: components.reduce(
-            (accum: Entity<Kind, Comp>["components"], component) => {
+            (accum: IEntity<Kind, Comp>["components"], component) => {
                 (accum as any)[component.kind] = component.value;
                 return accum;
             },
-            {} as Entity<Kind, Comp>["components"]
+            {} as IEntity<Kind, Comp>["components"]
         ),
     };
 }
 
 export { createEntity };
-export type { Entity, Components };
+export type { IEntity };

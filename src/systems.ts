@@ -1,17 +1,13 @@
-import { Entities, Sprite, Tile } from "./entities";
-import { Circle, Rect } from "./lib/component/shape";
-import type { Components, Entity } from "./lib/entity";
+import { Entity, Sprite, Tile } from "./entities";
+import { Circle, Rect } from "./lib/component/geometry";
 import { selectByCoords, selectSprites, selectTiles } from "./selectors";
+import type { SystemParams } from "./lib/types";
 
-interface SystemParams {
-    ctx: CanvasRenderingContext2D;
-    query: (selector: (entity: Entity<Entities["kind"], Components>) => boolean) => Entity<Entities["kind"], Components>[];
-}
 
-function setupDragAndDrop({ ctx, query }: SystemParams) {
-    const canvas = ctx.canvas;
+function setupDragAndDrop({ canvasCtx, query }: SystemParams) {
+    const canvas = canvasCtx.canvas;
 
-    let clickedEntities: Entity<Entities["kind"], Components>[] = [];
+    let clickedEntities: Entity[] = [];
 
     canvas.addEventListener("mousedown", onMousedown);
     canvas.addEventListener("mouseup", onMouseup);
@@ -19,8 +15,8 @@ function setupDragAndDrop({ ctx, query }: SystemParams) {
     function onMousemove(ev: MouseEvent) {
         for (let i = 0; i < clickedEntities.length; i++) {
             const entity = clickedEntities[i];
-            entity.components.shape.x = ev.offsetX;
-            entity.components.shape.y = ev.offsetY;
+            entity.components.geometry.x = ev.offsetX;
+            entity.components.geometry.y = ev.offsetY;
         }
     }
 
@@ -36,34 +32,34 @@ function setupDragAndDrop({ ctx, query }: SystemParams) {
 }
 
 
-function drawEntities({ ctx, query }: SystemParams) {
+function drawEntities({ canvasCtx, query }: SystemParams) {
     const sprites = query(selectSprites) as Sprite[];
     const tiles = query(selectTiles) as Tile[];
 
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    canvasCtx.clearRect(0, 0, canvasCtx.canvas.width, canvasCtx.canvas.height);
 
     tiles.forEach((tile) => {
-        const { x, y, w, h } = tile.components.shape as Rect;
+        const { x, y, w, h } = tile.components.geometry as Rect;
         const { strokeStyle, fillStyle } = tile.components.style;
-        ctx.beginPath();
-        ctx.strokeStyle = strokeStyle;
-        ctx.fillStyle = fillStyle;
-        ctx.rect(x, y, w, h);
-        ctx.fill();
-        ctx.stroke();
-        ctx.closePath();
+        canvasCtx.beginPath();
+        canvasCtx.strokeStyle = strokeStyle;
+        canvasCtx.fillStyle = fillStyle;
+        canvasCtx.rect(x, y, w, h);
+        canvasCtx.fill();
+        canvasCtx.stroke();
+        canvasCtx.closePath();
     });
 
     sprites.forEach((sprite) => {
-        const { x, y, r } = sprite.components.shape as Circle;
+        const { x, y, r } = sprite.components.geometry as Circle;
         const { strokeStyle, fillStyle } = sprite.components.style;
-        ctx.beginPath();
-        ctx.strokeStyle = strokeStyle;
-        ctx.fillStyle = fillStyle;
-        ctx.arc(x, y, r, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
-        ctx.closePath();
+        canvasCtx.beginPath();
+        canvasCtx.strokeStyle = strokeStyle;
+        canvasCtx.fillStyle = fillStyle;
+        canvasCtx.arc(x, y, r, 0, Math.PI * 2);
+        canvasCtx.fill();
+        canvasCtx.stroke();
+        canvasCtx.closePath();
     });
 }
 

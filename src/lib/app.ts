@@ -1,37 +1,36 @@
-/**
- * 
- * @param {HTMLCanvasElement} canvas 
- */
-function createApp(canvas) {
-    const _onLoad = [];
-    const _schedule = [];
-    const _entities = {};
+import { Entity } from "../entities";
+import { IAppState, Selector, System } from "./types";
 
-    const _ctx = canvas.getContext("2d");
 
-    function addStartupSystem(system) {
+function createApp(canvas: HTMLCanvasElement) {
+    const _onLoad: (() => void)[] = [];
+    const _schedule: (() => void)[] = [];
+    const _entities: Record<string, Entity> = {};
+    const _state: Record<string, IAppState> = {};
+
+    const canvasCtx = canvas.getContext("2d") as CanvasRenderingContext2D;
+
+    function addStartupSystem(system: System) {
         _onLoad.push(() => system({
             query,
-            entities: _entities,
-            ctx: _ctx,
+            canvasCtx,
         }));
     }
 
-    function addSystem(system) {
+    function addSystem(system: System) {
         _schedule.push(() => system({
             query,
-            entities: _entities,
-            ctx: _ctx,
+            canvasCtx,
         }));
     }
 
-    function addEntity(entity) {
+    function addEntity(entity: Entity) {
         _entities[entity.id] = entity;
     }
 
-    function query(selector) {
+    function query(selector: Selector) {
         const entityIds = Object.keys(_entities);
-        const results = [];
+        const results: Entity[] = [];
         for (let i = 0; i < entityIds.length; i++) {
             const entity = _entities[entityIds[i]];
             if (selector(entity)) {
@@ -41,12 +40,12 @@ function createApp(canvas) {
         return results;
     }
 
-    let _animationHandle;
+    let _animationHandle: number;
 
     function run() {
         while (_onLoad.length) {
-            const system = _onLoad.shift();
-            system();
+            const system = _onLoad.shift() as System;
+            system({ canvasCtx, query });
         }
         for (let i = 0; i < _schedule.length; i++) {
             _schedule[i]();

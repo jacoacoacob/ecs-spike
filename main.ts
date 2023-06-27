@@ -17,11 +17,11 @@ if (canvas) {
     
     app.addEntity(createSprite(50, 30, 20));
     app.addEntity(createSprite(600, 440, 30));
-    app.addEntity(createTile(40, 40, 20, 20));
-    app.addEntity(createTile(90, 40, 20, 20));
-    app.addEntity(createTile(140, 40, 20, 20));
-    app.addEntity(createTile(190, 40, 20, 20));
-    app.addEntity(createTile(240, 40, 20, 20));
+    app.addEntity(createTile(40, 60, 20, 20));
+    app.addEntity(createTile(90, 60, 20, 20));
+    app.addEntity(createTile(140, 60, 20, 20));
+    app.addEntity(createTile(190, 60, 20, 20));
+    app.addEntity(createTile(240, 60, 20, 20));
     app.addEntity(createTile(240, 90, 20, 20));
     app.addEntity(createTile(240, 140, 20, 20));
     app.addEntity(createTile(240, 190, 20, 20));

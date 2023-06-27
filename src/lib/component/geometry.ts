@@ -1,4 +1,4 @@
-import type { Component } from "../types";
+import type { IComponent } from "../types";
 
 interface Rect {
     kind: "rect";
@@ -15,16 +15,16 @@ interface Circle {
     r: number;
 }
 
-type Shape = Component<"shape", Rect | Circle>;
+type Geometry = IComponent<"geometry", Rect | Circle>;
 
-type ShapeOptions<Kind extends "circle" | "rect"> = Kind extends "circle"
+type GeometryOptions<Kind extends "circle" | "rect"> = Kind extends "circle"
     ? Pick<Circle, "kind"> & Partial<Omit<Circle, "kind">>
     : Pick<Rect, "kind"> & Partial<Omit<Rect, "kind">>
 
-function shape<Kind extends "circle" | "rect">(value: ShapeOptions<Kind>): Shape {
+function geometry<Kind extends "circle" | "rect">(value: GeometryOptions<Kind>): Geometry {
     if (value.kind === "circle") {
         return {
-            kind: "shape",
+            kind: "geometry",
             value: {
                 kind: "circle",
                 x: value.x ?? 0,
@@ -35,7 +35,7 @@ function shape<Kind extends "circle" | "rect">(value: ShapeOptions<Kind>): Shape
     }
 
     return {
-        kind: "shape",
+        kind: "geometry",
         value: {
             kind: "rect",
             x: value.x ?? 0,
@@ -46,5 +46,5 @@ function shape<Kind extends "circle" | "rect">(value: ShapeOptions<Kind>): Shape
     }
 }
 
-export { shape };
-export type { Shape, Circle, Rect };
+export { geometry };
+export type { Geometry, Circle, Rect };

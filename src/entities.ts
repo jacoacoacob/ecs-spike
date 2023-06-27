@@ -7,7 +7,7 @@ function createSprite(x: number, y: number, r: number) {
         kind: "sprite",
         id: randId(6),
         components: [
-            component.shape({ kind: "circle", x, y, r }),
+            component.geometry({ kind: "circle", x, y, r }),
             component.style({
                 fillStyle: "blue",
                 strokeStyle: "pink",
@@ -21,7 +21,7 @@ function createTile(x: number, y: number, w: number, h: number) {
         kind: "tile",
         id: randId(6),
         components: [
-            component.shape({ kind: "rect", x, y, w, h }),
+            component.geometry({ kind: "rect", x, y, w, h }),
             component.style({
                 fillStyle: "orange",
             }),
@@ -29,10 +29,25 @@ function createTile(x: number, y: number, w: number, h: number) {
     });
 }
 
-type Tile = ReturnType<typeof createTile>;
-type Sprite = ReturnType<typeof createSprite>;
+function createWorld() {
+    return createEntity({
+        kind: "world",
+        id: randId(6),
+        components: [
+            component.tileMap({
+                cols: 6,
+                rows: 9,
+                tileSize: 100,
+            }),
+        ],
+    });
+}
 
-type Entities = Tile | Sprite;
+type Sprite = ReturnType<typeof createSprite>;
+type Tile = ReturnType<typeof createTile>;
+
+
+type Entity = Sprite | Tile;
 
 export { createSprite, createTile };
-export { Tile, Sprite, Entities };
+export { Tile, Sprite, Entity };
