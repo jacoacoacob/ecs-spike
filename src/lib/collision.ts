@@ -1,5 +1,23 @@
+import type { Rect, Circle } from "./component/shape";
 
-function isRectCollision(r1, r2) {
+type Shape = Rect | Circle;
+
+type Slim<S extends Shape> = Omit<S, "kind">;
+
+function isCollision(o1: Shape, o2: Shape) {
+    switch (o1.kind) {
+        case "circle": switch (o2.kind) {
+            case "circle": return isCircleCollision(o1, o2);
+            case "rect": return isRectCircleCollsion(o2, o1);
+        }
+        case "rect": switch (o2.kind) {
+            case "circle": return isRectCircleCollsion(o1, o2);
+            case "rect": return isRectCollision(o1, o2);
+        }
+    }
+}
+
+function isRectCollision(r1: Slim<Rect>, r2: Slim<Rect>) {
     return (
         r1.x + r1.w >= r2.x &&
         r1.x <= r2.x + r2.w &&
@@ -8,14 +26,14 @@ function isRectCollision(r1, r2) {
     );
 }
 
-function isCircleCollision(c1, c2) {
+function isCircleCollision(c1: Slim<Circle>, c2: Slim<Circle>) {
     const distanceX = c1.x - c2.x;
     const distanceY = c1.y - c2.y;
     const distance = Math.sqrt(distanceX ** 2 + distanceY ** 2);
     return distance <= c1.r + c2.r;
 }
 
-function isRectCircleCollsion(r, c) {
+function isRectCircleCollsion(r: Slim<Rect>, c: Slim<Circle>) {
     let testX = c.x;
     let testY = c.y;
 
@@ -40,4 +58,4 @@ function isRectCircleCollsion(r, c) {
     return c.r >= distance;
 }
 
-export { isRectCircleCollsion, isRectCollision, isCircleCollision };
+export { isCollision, isRectCircleCollsion, isRectCollision, isCircleCollision };
