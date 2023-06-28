@@ -1,7 +1,7 @@
 import { selectByCoords, selectSprites, selectTiles } from "./selector";
 import type { Sprite, Tile } from "./entity";
 import type { Circle, Rect } from "./component/geometry";
-import type { SystemParams } from "./lib/types";
+import type { SystemParams } from "./system/types";
 
 
 function setupDragAndDrop({ canvasCtx, query }: SystemParams) {

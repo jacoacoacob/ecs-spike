@@ -12,13 +12,12 @@ import type { Style } from "./style";
 import type { TileMap } from "./tile-map";
 import type { Velocity } from "./velocity";
 
-type Component = (
+type Component = 
     Camera |
     Dimension |
     Geometry |
     Style |
     TileMap |
-    Velocity
-);
+    Velocity;
 
-export type { Component }
+export type { Component };

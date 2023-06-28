@@ -9,6 +9,11 @@ function updateVisibleEntities({ query }: SystemParams) {
 
     const { camera, tileMap } = world.components;
 
+    const offsetX = camera.position.x + camera.viewport.x;
+    const offsetY = camera.position.y + camera.viewport.y;
+
+    // console.log(offsetX, offsetY)
+
     for (let i = 0; i < tiles.length; i++) {
         
     }

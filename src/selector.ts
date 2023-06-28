@@ -1,7 +1,8 @@
-import * as collision from "../util/collision"
-import type { Circle } from "../component/geometry";
-import type { Entity } from "../entity";
-import { Selector } from "./types";
+import * as collision from "./util/collision"
+import type { Circle } from "./component/geometry";
+import type { Entity } from "./entity";
+
+type Selector = (entity: Entity) => boolean;
 
 const selectTiles: Selector = (entity) => entity.kind === "tile";
 const selectSprites: Selector = (entity) => entity.kind === "sprite";
@@ -18,3 +19,4 @@ function selectByCoords(x: number, y: number) {
 }
 
 export { selectByCoords, selectSprites, selectTiles, selectWorld };
+export type { Selector };

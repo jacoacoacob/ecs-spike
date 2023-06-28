@@ -1,4 +1,4 @@
-import { IComponent } from "../lib/types";
+import { IComponent } from "./types";
 
 type Velocity = IComponent<"velocity", {
     dx: number;
