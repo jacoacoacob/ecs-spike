@@ -1,4 +1,4 @@
-import type { Selector } from "../selector/types";
+import type { Selector } from "../selector";
 import type { Entity } from "../entity";
 
 interface SystemParams {
@@ -7,6 +7,6 @@ interface SystemParams {
     spawn: (entity: Entity) => void;
 }
 
-type System = (params: SystemParams) => void;
+type System<App> = (app: App) => void;
 
 export type { System, SystemParams };

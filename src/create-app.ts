@@ -1,9 +1,10 @@
 import type { Entity } from "./entity";
 import type { Selector } from "./selector";
 import type { System } from "./system/types";
+import type { Plugin } from "./plugin/types";
 
 function createApp(canvas: HTMLCanvasElement) {
-    const _onLoad: (() => void)[] = [];
+    const _startup: (() => void)[] = [];
     const _schedule: (() => void)[] = [];
     const _entities: Record<string, Entity> = {};
     const _plugins: Record<string, Plugin> = {};
@@ -26,8 +27,13 @@ function createApp(canvas: HTMLCanvasElement) {
         return results;
     }
 
+    function addPlugin(plugin: Plugin) {
+        _plugins[plugin.name] = plugin;
+        plugin.setup();
+    }
+
     function addStartupSystem(system: System) {
-        _onLoad.push(() => system({
+        _startup.push(() => system({
             canvasCtx,
             query: _query,
             spawn: _spawn,
@@ -45,8 +51,8 @@ function createApp(canvas: HTMLCanvasElement) {
     let _animationHandle: number;
 
     function run() {
-        while (_onLoad.length) {
-            const system = _onLoad.shift() as System;
+        while (_startup.length) {
+            const system = _startup.shift() as System;
             system({
                 canvasCtx,
                 query: _query,
@@ -66,6 +72,7 @@ function createApp(canvas: HTMLCanvasElement) {
     return {
         addStartupSystem,
         addSystem,
+        addPlugin,
         run,
         stop,
     };
