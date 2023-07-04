@@ -1,4 +1,4 @@
-import type { IComponent } from "./types";
+import type { Component } from "../lib/component";
 
 interface Rect {
     kind: "rect";
@@ -17,7 +17,7 @@ interface Circle {
 
 type Slim<Shape extends Rect | Circle> = Omit<Shape, "kind">;
 
-type Geometry = IComponent<"geometry", Rect | Circle>;
+type Geometry = Component<"geometry", Rect | Circle>;
 
 type GeometryOptions<Kind extends "circle" | "rect"> = Kind extends "circle"
     ? Pick<Circle, "kind"> & Partial<Omit<Circle, "kind">>

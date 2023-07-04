@@ -1,6 +1,7 @@
-import { createLoop } from "./loop";
-import type { Resource } from "../resource/types";
-import type { System } from "../system/types";
+
+import { animationLoop } from "./animation-loop";
+import type { Resource } from "./resource";
+import type { System } from "./system";
 
 type Plugin<App> = (app: App) => void;
 
@@ -15,10 +16,16 @@ type Resources<R extends Resource<string, any>> = {
 
 
 class App<AppResource extends Resource<string, any>> {
-    private _loop = createLoop();
+    private _loop = animationLoop();
     private _startupSystems: (() => void)[] = [];
     private _systems: (() => void)[] = [];
     private _resources: Resources<AppResource> = {} as Resources<AppResource>;
+
+    private get _systemParams() {
+        return {
+            getResource: this.getResource.bind(this),
+        };
+    }
 
     constructor(params: AppParams<AppResource>) {
         const { resources, plugins } = params;
@@ -37,14 +44,13 @@ class App<AppResource extends Resource<string, any>> {
         });
     }
 
+
     addStartupSystem(system: System<App<AppResource>>) {
-        const self = this;
-        this._startupSystems.push(() => system(self));
+        this._startupSystems.push(() => system(this._systemParams));
     }
 
     addSystem(system: System<App<AppResource>>) {
-        const self = this;
-        this._systems.push(() => system(self));
+        this._systems.push(() => system(this._systemParams));
     }
     
     getResource<Name extends keyof Resources<AppResource>>(name: Name) {

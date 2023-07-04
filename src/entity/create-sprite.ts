@@ -1,6 +1,6 @@
 import { randId } from "../util/rand-id";
 import * as component from "../component";
-import { createEntity } from "./create-entity";
+import { createEntity } from "../lib/entity";
 
 function createSprite(x: number, y: number, r: number) {
     return createEntity({

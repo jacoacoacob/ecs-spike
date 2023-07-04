@@ -1,8 +1,17 @@
-import type { Resource, ResourceParams } from "./types";
+
+interface Resource<Name extends string, Data> {
+    name: Name;
+    data: Data;
+}
+
+interface ResourceParams<Name extends string, Data> {
+    name: Name;
+    setup: () => Data;
+}
 
 function createResource<
     Name extends string,
-    Data extends any
+    Data
 >(params: ResourceParams<Name, Data>): Resource<Name, Data> {
     const { name, setup } = params;
 
@@ -12,3 +21,4 @@ function createResource<
 }
 
 export { createResource };
+export type { Resource, ResourceParams };

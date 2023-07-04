@@ -1,6 +1,6 @@
-import { IComponent } from "./types";
+import type { Component } from "../lib/component";
 
-type Dimension = IComponent<"dimension", {
+type Dimension = Component<"dimension", {
     w: number;
     h: number;
 }>;

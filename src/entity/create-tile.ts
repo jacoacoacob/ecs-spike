@@ -1,6 +1,6 @@
 import { randId } from "../util/rand-id";
 import * as component from "../component";
-import { createEntity } from "./create-entity";
+import { createEntity } from "../lib/entity";
 
 function createTile(x: number, y: number, w: number, h: number) {
     return createEntity({

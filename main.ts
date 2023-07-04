@@ -1,9 +1,8 @@
-import { App } from "./src/app/create-app";
+import { App } from "./src/lib/app";
 import { keyboard } from "./src/resource/keyboard";
+import { canvas } from "./src/resource/canvas";
 import type { AppResource } from "./src/resource";
 import { setupKeyboardListeners } from "./src/system/setup-keyboard-listeners";
-import { canvas } from "./src/resource/canvas";
-
 
 const app = new App<AppResource>({
     resources: [
@@ -15,16 +14,16 @@ const app = new App<AppResource>({
 app.addStartupSystem(setupKeyboardListeners);
 
 app.addSystem((app) => {
-    // const { ctx } = app.getResource("canvas");
-    // const keyboard = app.getResource("keyboard");
-    // keyboard.tick();
-    // ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    // if (keyboard.justPressed("ArrowDown")) {
-    //     ctx.strokeText("JUST PRESSED ARROW_DOWN", 50, 50);
-    // }
-    // if (keyboard.justReleased("ArrowDown")) {
-    //     ctx.strokeText("RELEASED ARROW_DOWN", 50, 50);
-    // }
+    const { ctx } = app.getResource("canvas");
+    const keyboard = app.getResource("keyboard");
+    keyboard.tick();
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    if (keyboard.justPressed("ArrowDown")) {
+        ctx.strokeText("JUST PRESSED ARROW_DOWN", 50, 50);
+    }
+    if (keyboard.justReleased("ArrowDown")) {
+        ctx.strokeText("RELEASED ARROW_DOWN", 50, 50);
+    }
 })
 
 function delay(millis: number) {

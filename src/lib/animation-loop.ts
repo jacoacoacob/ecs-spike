@@ -1,6 +1,5 @@
-import { System, SystemParams } from "../system/types";
 
-function createLoop<App>() {
+function animationLoop() {
     let _handle: number;
 
     function run(systems: (() => void)[]) {
@@ -17,4 +16,4 @@ function createLoop<App>() {
     return { run, stop };
 }
 
-export { createLoop };
+export { animationLoop };

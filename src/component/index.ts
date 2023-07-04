@@ -12,7 +12,7 @@ import type { Style } from "./style";
 import type { TileMap } from "./tile-map";
 import type { Velocity } from "./velocity";
 
-type Component = 
+type AppComponent = 
     Camera |
     Dimension |
     Geometry |
@@ -20,4 +20,4 @@ type Component =
     TileMap |
     Velocity;
 
-export type { Component };
+export type { AppComponent };

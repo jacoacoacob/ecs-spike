@@ -1,4 +1,4 @@
-import { createResource } from "./create-resource";
+import { createResource } from "../lib/resource";
 
 const KEYS = [
     " ",
@@ -18,8 +18,10 @@ function keyboard() {
     return createResource({
         name: "keyboard",
         setup() {
+            type Frames = number;
+
             const _justPressed = Object.fromEntries(KEYS.map((key) => [key, false])) as Record<Key, boolean>;
-            const _pressed = Object.fromEntries(KEYS.map((key) => [key, false])) as Record<Key, boolean>;
+            const _pressed = Object.fromEntries(KEYS.map((key) => [key, 0])) as Record<Key, Frames>;
             const _justReleased = Object.fromEntries(KEYS.map((key) => [key, false])) as Record<Key, boolean>;
 
             const qJustPressed: Key[] = [];
@@ -35,7 +37,7 @@ function keyboard() {
                 qJustReleased.push(key);
             }
 
-            function pressed(key: Key) {
+            function pressed(key: Key): Frames {
                 return _pressed[key];
             }
 
@@ -52,7 +54,7 @@ function keyboard() {
                     const key = KEYS[i];
                     if (_justPressed[key]) {
                         _justPressed[key] = false;
-                        _pressed[key] = true;
+                        _pressed[key] += 1;
                     }
                     _justReleased[key] = false;
                 }
@@ -64,7 +66,7 @@ function keyboard() {
 
                 while (qJustReleased.length) {
                     const key = qJustReleased.shift() as Key;
-                    _pressed[key] = false;
+                    _pressed[key] = 0;
                     _justReleased[key] = true;
                 }
             }

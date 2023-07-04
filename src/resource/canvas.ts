@@ -1,4 +1,4 @@
-import { createResource } from "./create-resource";
+import { createResource } from "../lib/resource";
 
 function canvas() {
     return createResource({

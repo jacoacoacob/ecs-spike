@@ -1,6 +1,6 @@
-import type { IComponent } from "./types";
+import type { Component } from "../lib/component";
 
-type Camera = IComponent<"camera", {
+type Camera = Component<"camera", {
     position: {
         x: number;
         y: number;
