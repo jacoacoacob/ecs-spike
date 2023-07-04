@@ -15,6 +15,8 @@ interface Circle {
     r: number;
 }
 
+type Slim<Shape extends Rect | Circle> = Omit<Shape, "kind">;
+
 type Geometry = IComponent<"geometry", Rect | Circle>;
 
 type GeometryOptions<Kind extends "circle" | "rect"> = Kind extends "circle"
@@ -47,4 +49,4 @@ function geometry<Kind extends "circle" | "rect">(value: GeometryOptions<Kind>):
 }
 
 export { geometry };
-export type { Geometry, Circle, Rect };
+export type { Geometry, Circle, Rect, Slim };

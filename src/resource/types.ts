@@ -1,12 +1,11 @@
 
-interface Resource<Name extends string, Data> {
+interface Resource<Name extends string, Data extends any> {
     name: Name;
     data: Data;
 }
 
 interface ResourceParams<Name extends string, Data> {
     name: Name;
-    // data: Data;
     setup: () => Data;
 }
 

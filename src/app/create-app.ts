@@ -9,11 +9,15 @@ interface AppParams<AppResource extends Resource<string, any>> {
     plugins?: Plugin<App<AppResource>>[];
 }
 
-type Resources<AppResource extends Resource<string, any>> = Record<string, AppResource>;
+type Resources<R extends Resource<string, any>> = {
+    [X in R as X["name"]]: X["data"];
+};
+
 
 class App<AppResource extends Resource<string, any>> {
     private _loop = createLoop();
-    private _systems: (() => void)[] = []; 
+    private _startupSystems: (() => void)[] = [];
+    private _systems: (() => void)[] = [];
     private _resources: Resources<AppResource> = {} as Resources<AppResource>;
 
     constructor(params: AppParams<AppResource>) {
@@ -22,10 +26,10 @@ class App<AppResource extends Resource<string, any>> {
         this._resources = resources.reduce(
             (accum: Resources<AppResource>, resource_) => {
                 const resource = resource_();
-                accum[resource.name] = resource;
+                accum[resource.name] = resource.data;
                 return accum;
             },
-            {}
+            {} as Resources<AppResource>
         );
 
         (plugins ?? []).forEach((plugin) => {
@@ -33,15 +37,25 @@ class App<AppResource extends Resource<string, any>> {
         });
     }
 
-    addSystem(system: System<App<AppResource>>) {
-        this._systems.push(() => system(this));
+    addStartupSystem(system: System<App<AppResource>>) {
+        const self = this;
+        this._startupSystems.push(() => system(self));
     }
 
-    getResource<Name extends AppResource["name"]>(name: Name){
+    addSystem(system: System<App<AppResource>>) {
+        const self = this;
+        this._systems.push(() => system(self));
+    }
+    
+    getResource<Name extends keyof Resources<AppResource>>(name: Name) {
         return this._resources[name];
     }
 
     run() {
+        while (this._startupSystems.length) {
+            const system = this._startupSystems.shift()!;
+            system();
+        }
         this._loop.run(this._systems);
     }
 

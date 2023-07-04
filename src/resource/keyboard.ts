@@ -1,46 +1,87 @@
 import { createResource } from "./create-resource";
 
-interface PressedKey {
-    key: string;
-    shiftKey: boolean;
-    metaKey: boolean;
-    ctrlKey: boolean;
-    altKey: boolean;
-    timestamp: number;
+const KEYS = [
+    " ",
+    "ArrowDown",
+    "ArrowLeft",
+    "ArrowRight",
+    "ArrowUp",
+] as const;
+
+type Key = typeof KEYS[number];
+
+function isKey(data: string): data is Key {
+    return KEYS.includes(data as Key);
 }
-
-function keyboardInput() {
+    
+function keyboard() {
     return createResource({
-        name: "keyboard-input",
+        name: "keyboard",
         setup() {
-            const pressedKeys: PressedKey[] = [];
+            const _justPressed = Object.fromEntries(KEYS.map((key) => [key, false])) as Record<Key, boolean>;
+            const _pressed = Object.fromEntries(KEYS.map((key) => [key, false])) as Record<Key, boolean>;
+            const _justReleased = Object.fromEntries(KEYS.map((key) => [key, false])) as Record<Key, boolean>;
 
-            window.addEventListener("keydown", (ev) => {
-                const { key, shiftKey, metaKey, ctrlKey, altKey } = ev;
-                const timestamp = Date.now();
-                pressedKeys.push({
-                    key,
-                    altKey,
-                    shiftKey,
-                    metaKey,
-                    ctrlKey,
-                    timestamp,
-                })
-            });
-            
-            window.addEventListener("keyup", (ev) => {
-                const index = pressedKeys.findIndex((x) => x.key === ev.key);
-                pressedKeys.splice(index, 1);
-            })
+            const qJustPressed: Key[] = [];
+            const qJustReleased: Key[] = [];
+
+            function press(key: Key) {
+                if (!pressed(key)) {
+                    qJustPressed.push(key);
+                }
+            }
+
+            function release(key: Key) {
+                qJustReleased.push(key);
+            }
+
+            function pressed(key: Key) {
+                return _pressed[key];
+            }
+
+            function justPressed(key: Key) {
+                return _justPressed[key];
+            }
+
+            function justReleased(key: Key) {
+                return _justReleased[key];
+            }
+
+            function tick() {
+                for (let i = 0; i < KEYS.length; i++) {
+                    const key = KEYS[i];
+                    if (_justPressed[key]) {
+                        _justPressed[key] = false;
+                        _pressed[key] = true;
+                    }
+                    _justReleased[key] = false;
+                }
+
+                while (qJustPressed.length) {
+                    const key = qJustPressed.shift() as Key;
+                    _justPressed[key] = true;
+                }
+
+                while (qJustReleased.length) {
+                    const key = qJustReleased.shift() as Key;
+                    _pressed[key] = false;
+                    _justReleased[key] = true;
+                }
+            }
 
             return {
-                pressedKeys
+                tick,
+                press,
+                release,
+                pressed,
+                justPressed,
+                justReleased,
             };
         },
     });
 }
 
-type KeyboardInput = ReturnType<typeof keyboardInput>;
+type Keyboard = ReturnType<typeof keyboard>;
 
-export { keyboardInput };
-export type { KeyboardInput };
+export { keyboard, isKey };
+export type { Keyboard };
