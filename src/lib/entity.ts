@@ -33,3 +33,4 @@ function createEntity<Kind extends string, Comp extends Component<string, any>>(
 }
 
 export { createEntity };
+export type { Entity };

@@ -6,6 +6,6 @@ import type { Sprite } from "./create-sprite";
 import type { Tile } from "./create-tile";
 import type { World } from "./create-world";
 
-type Entity = Sprite | Tile | World;
+type AppEntity = Sprite | Tile | World;
 
-export type { Entity, Sprite, Tile, World };
+export type { AppEntity, Sprite, Tile, World };

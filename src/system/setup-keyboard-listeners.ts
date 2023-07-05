@@ -1,9 +1,11 @@
-import { App } from "../app/create-app";
-import type { AppResource } from "../resource";
+import { App } from "../lib/app";
 import { isKey } from "../resource/keyboard";
+import type { SystemParams } from "../lib/system";
+import type { AppResource } from "../resource";
+import type { AppEntity } from "../entity";
 
-function setupKeyboardListeners(app: App<AppResource>) {
-    const keyboard = app.getResource("keyboard");
+function setupKeyboardListeners(params: SystemParams<App<AppResource, AppEntity>>) {
+    const keyboard = params.getResource("keyboard");
 
     window.addEventListener("keydown", (ev) => {
         if (isKey(ev.key)) {

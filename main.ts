@@ -2,29 +2,47 @@ import { App } from "./src/lib/app";
 import { keyboard } from "./src/resource/keyboard";
 import { canvas } from "./src/resource/canvas";
 import type { AppResource } from "./src/resource";
+import { createSprite, type AppEntity, Sprite } from "./src/entity";
 import { setupKeyboardListeners } from "./src/system/setup-keyboard-listeners";
+import { setupCanvasResize } from "./src/system/setup-canvas-resize";
+import { drawVisibleEntities } from "./src/system/draw-visible-entities";
 
-const app = new App<AppResource>({
+const app = new App<AppResource, AppEntity>({
     resources: [
         keyboard,
         canvas,
     ],
 });
 
+app.addStartupSystem(setupCanvasResize);
 app.addStartupSystem(setupKeyboardListeners);
+app.addStartupSystem(({ spawn }) => {
+    spawn(createSprite(50, 50, 30))
+})
 
-app.addSystem((app) => {
-    const { ctx } = app.getResource("canvas");
+app.addSystem(({ getResource }) => {
     const keyboard = app.getResource("keyboard");
     keyboard.tick();
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    if (keyboard.justPressed("ArrowDown")) {
-        ctx.strokeText("JUST PRESSED ARROW_DOWN", 50, 50);
+});
+
+app.addSystem((app) => {
+    const keyboard = app.getResource("keyboard");
+    const [sprite] = app.query((entity) => entity.kind === "sprite") as Sprite[];
+    if (keyboard.pressed("ArrowDown")) {
+        sprite.components.geometry.y += 4;
     }
-    if (keyboard.justReleased("ArrowDown")) {
-        ctx.strokeText("RELEASED ARROW_DOWN", 50, 50);
+    if (keyboard.pressed("ArrowUp")) {
+        sprite.components.geometry.y -= 4;
+    }
+    if (keyboard.pressed("ArrowRight")) {
+        sprite.components.geometry.x += 4;
+    }
+    if (keyboard.pressed("ArrowLeft")) {
+        sprite.components.geometry.x -= 4;
     }
 })
+
+app.addSystem(drawVisibleEntities);
 
 function delay(millis: number) {
     return new Promise((resolve) => {

@@ -1,9 +1,11 @@
 import { App } from "./app";
 
-interface SystemParams<A extends App<any>> {
+interface SystemParams<A extends App<any, any>> {
     getResource: A["getResource"];
+    spawn: A["spawn"];
+    query: A["query"];
 }
 
-type System<A extends App<any>> = (params: SystemParams<A>) => void;
+type System<A extends App<any, any>> = (params: SystemParams<A>) => void;
 
 export type { System, SystemParams };
