@@ -1,30 +1,27 @@
 import { App } from "../lib/app";
 import type { SystemParams } from "../lib/system";
 import type { AppResource } from "../resource";
-import type { AppEntity, Sprite, Tile } from "../entity";
-import type { Circle, Rect } from "../component/geometry";
-import { EntityWith, withComponent } from "../lib/entity";
-import type { Transform } from "../component/transform";
+import type { AppEntity, BoardSquare, Sprite } from "../entity";
 
 function drawVisibleEntities({ getResource, query }: SystemParams<App<AppResource, AppEntity>>) {
     const { ctx } = getResource("canvas");
     const sprites = query(entity => entity.kind === "sprite") as Sprite[];
-    const tiles = query(entity => entity.kind === "tile") as Tile[];
+    const squares = query(entity => entity.kind === "boardSquare") as BoardSquare[];
 
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-    for (let i = 0; i < tiles.length; i++) {
+    for (let i = 0; i < squares.length; i++) {
         const {
             components: {
                 style: {
                     fillStyle,
                     strokeStyle
                 },
-                rectSize,
+                size,
                 transform
             }
-        } = tiles[i];
-        const { w, h } = rectSize;
+        } = squares[i];
+        const { w, h } = size;
         const { x, y }= transform.translation;
         ctx.beginPath();
         ctx.rect(x, y, w, h);
@@ -43,12 +40,12 @@ function drawVisibleEntities({ getResource, query }: SystemParams<App<AppResourc
                     strokeStyle
                 },
                 transform,
-                radius
+                size
             }
         } = sprites[i];
         const { x, y } = transform.translation;
         ctx.beginPath();
-        ctx.arc(x, y, radius, 0, Math.PI * 2);
+        ctx.rect(x, y, size.w, size.h);
         ctx.fillStyle = fillStyle;
         ctx.strokeStyle = strokeStyle;
         ctx.fill();

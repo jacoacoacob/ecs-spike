@@ -38,6 +38,7 @@ class App<
             getResource: this.getResource.bind(this),
             spawn: this.spawn.bind(this),
             query: this.query.bind(this),
+            queryFirst: this.queryFirst.bind(this),
         };
     }
 
@@ -62,15 +63,24 @@ class App<
         this._entities[entity.id] = entity;
     }
 
-    query(selector: (entity: AppEntity) => boolean) {
+    query<E extends AppEntity>(selector: (entity: E) => boolean): E[] {
         const entityIds = Object.keys(this._entities);
-        const results: AppEntity[] = [];
+        const results: E[] = [];
         for (let i = 0; i < entityIds.length; i++) {
             if (selector(this._entities[entityIds[i]])) {
                 results.push(this._entities[entityIds[i]]);
             }
         }
         return results;
+    }
+
+    queryFirst<E extends AppEntity>(selector: (entity: E) => boolean): E | undefined {
+        const entityIds = Object.keys(this._entities);
+        for (let i = 0; i < entityIds.length; i++) {
+            if (selector(this._entities[entityIds[i]])) {
+                return this._entities[entityIds[i]]
+            }
+        }
     }
 
     addStartupSystem(system: System<App<AppResource, AppEntity>>) {

@@ -1,13 +1,13 @@
 import { Component } from "../lib/component";
 
-type RectSize = Component<"rectSize", {
+type Size = Component<"size", {
     w: number;
     h: number;
 }>;
 
-function rectSize(w?: number, h?: number): RectSize {
+function size(w?: number, h?: number): Size {
     return {
-        kind: "rectSize",
+        kind: "size",
         value: {
             w: w ?? 0,
             h: h ?? 0,
@@ -15,5 +15,5 @@ function rectSize(w?: number, h?: number): RectSize {
     };
 }
 
-export { rectSize };
-export type { RectSize };
+export { size };
+export type { Size };

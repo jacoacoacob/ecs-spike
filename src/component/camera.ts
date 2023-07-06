@@ -1,29 +1,37 @@
 import type { Component } from "../lib/component";
 
 type Camera = Component<"camera", {
-    position: {
+    translation: {
         x: number;
         y: number;
     };
     viewport: {
-        x: number;
-        y: number;
-        w: number;
-        h: number;
+        translation: {
+            x: number;
+            y: number;
+        };
+        size: {
+            w: number;
+            h: number;
+        }
     };
     visibleEntities: string[];
 }>;
 
 type CameraOptions = Partial<{
-    position: Partial<{
+    translation: Partial<{
         x: number;
         y: number;
     }>;
     viewport: Partial<{
-        x: number;
-        y: number;
-        w: number;
-        h: number;
+        translation: Partial<{
+            x: number;
+            y: number;
+        }>;
+        size: Partial<{
+            w: number;
+            h: number;
+        }>;
     }>;
 }>
 
@@ -31,15 +39,19 @@ function camera(value?: CameraOptions): Camera {
     return {
         kind: "camera",
         value: {
-            position: {
-                x: value?.position?.x ?? 0,
-                y: value?.position?.y ?? 0,
+            translation: {
+                x: value?.translation?.x ?? 0,
+                y: value?.translation?.y ?? 0,
             },
             viewport: {
-                x: value?.viewport?.x ?? 0,
-                y: value?.viewport?.y ?? 0,
-                w: value?.viewport?.w ?? 0,
-                h: value?.viewport?.h ?? 0,
+                translation: {
+                    x: value?.viewport?.translation?.x ?? 0,
+                    y: value?.viewport?.translation?.y ?? 0,
+                },
+                size: {
+                    w: value?.viewport?.size?.w ?? 0,
+                    h: value?.viewport?.size?.h ?? 0,
+                }
             },
             visibleEntities: [],
         },

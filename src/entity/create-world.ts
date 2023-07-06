@@ -7,6 +7,7 @@ function createWorld() {
         kind: "world",
         id: randId(6),
         components: [
+            component.children(),
             component.tileMap({
                 rows: 6,
                 cols: 9,
@@ -14,8 +15,10 @@ function createWorld() {
             }),
             component.camera({
                 viewport: {
-                    w: 600,
-                    h: 400,
+                    size: {
+                        w: 600,
+                        h: 400,
+                    },
                 },
             }),
         ],

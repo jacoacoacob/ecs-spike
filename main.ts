@@ -1,13 +1,14 @@
 import { App } from "./src/lib/app";
 import type { AppResource } from "./src/resource";
+import type { AppEntity } from "./src/entity";
 import { keyboard } from "./src/resource/keyboard";
 import { canvas } from "./src/resource/canvas";
-import { createSprite, type AppEntity, createTile } from "./src/entity";
 import { setupKeyboardListeners } from "./src/system/setup-keyboard-listeners";
 import { setupCanvasResize } from "./src/system/setup-canvas-resize";
 import { drawVisibleEntities } from "./src/system/draw-visible-entities";
 import { respondToKeyboardInput } from "./src/system/respond-to-keyboard-input";
 import { updateEntityPositions } from "./src/system/update-entity-positions";
+import { setupEntities } from "./src/system/setup-entities";
 
 const app = new App<AppResource, AppEntity>({
     resources: [
@@ -18,11 +19,7 @@ const app = new App<AppResource, AppEntity>({
 
 app.addStartupSystem(setupCanvasResize);
 app.addStartupSystem(setupKeyboardListeners);
-app.addStartupSystem(({ spawn, getResource }) => {
-    spawn(createSprite(50, 50, 30));
-    // spawn(createTile(100, 100, 30, 32));
-    // spawn(createTile(150, 150, 30, 32));
-})
+app.addStartupSystem(setupEntities);
 
 app.addSystem(({ getResource }) => {
     const keyboard = getResource("keyboard");

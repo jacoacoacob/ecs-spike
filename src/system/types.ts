@@ -1,7 +1,7 @@
-import { AppEntity } from "../entity";
 import { App } from "../lib/app";
-import { SystemParams } from "../lib/system";
-import { AppResource } from "../resource";
+import type { AppEntity } from "../entity";
+import type { AppResource } from "../resource";
+import type { SystemParams } from "../lib/system";
 
 type AppSystemParams = SystemParams<App<AppResource, AppEntity>>;
 

@@ -2,13 +2,14 @@ import { randId } from "../util/rand-id";
 import * as component from "../component";
 import { createEntity } from "../lib/entity";
 
-function createSprite(x: number, y: number, r: number) {
+function createSprite(parentId: string) {
     return createEntity({
         kind: "sprite",
         id: randId(6),
         components: [
-            component.transform(x, y),
-            component.radius(r),
+            component.parent(parentId),
+            component.transform(),
+            component.size(),
             component.velocity(),
             component.style({
                 fillStyle: "blue",
