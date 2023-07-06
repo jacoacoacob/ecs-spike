@@ -14,11 +14,25 @@ interface EntityOptions<Kind extends string, Comp extends Component<string, any>
     components: Comp[];
 }
 
+type EntityWith<Comp extends Component<string, any>> = Entity<string, Comp>;
+
+function withComponent<Comp extends Component<string, any>>(
+    entity: EntityWith<any>,
+    componentKinds: Comp["kind"][]
+): entity is EntityWith<Comp> {
+    for (let i = 0; i < componentKinds.length; i++) {
+        if (Boolean((entity.components as any)[componentKinds[i]]) === false) {
+            return false
+        }
+    }
+    return true;
+}
+
 function createEntity<Kind extends string, Comp extends Component<string, any>>({
     kind,
     id,
     components
-}: EntityOptions<Kind, Comp>) {
+}: EntityOptions<Kind, Comp>): Entity<Kind, Comp> {
     return {
         kind,
         id,
@@ -32,5 +46,5 @@ function createEntity<Kind extends string, Comp extends Component<string, any>>(
     }
 }
 
-export { createEntity };
-export type { Entity };
+export { createEntity, withComponent };
+export type { Entity, EntityWith };

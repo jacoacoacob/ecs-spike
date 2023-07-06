@@ -1,11 +1,13 @@
 import { App } from "./src/lib/app";
+import type { AppResource } from "./src/resource";
 import { keyboard } from "./src/resource/keyboard";
 import { canvas } from "./src/resource/canvas";
-import type { AppResource } from "./src/resource";
-import { createSprite, type AppEntity, Sprite } from "./src/entity";
+import { createSprite, type AppEntity, createTile } from "./src/entity";
 import { setupKeyboardListeners } from "./src/system/setup-keyboard-listeners";
 import { setupCanvasResize } from "./src/system/setup-canvas-resize";
 import { drawVisibleEntities } from "./src/system/draw-visible-entities";
+import { respondToKeyboardInput } from "./src/system/respond-to-keyboard-input";
+import { updateEntityPositions } from "./src/system/update-entity-positions";
 
 const app = new App<AppResource, AppEntity>({
     resources: [
@@ -16,45 +18,22 @@ const app = new App<AppResource, AppEntity>({
 
 app.addStartupSystem(setupCanvasResize);
 app.addStartupSystem(setupKeyboardListeners);
-app.addStartupSystem(({ spawn }) => {
-    spawn(createSprite(50, 50, 30))
+app.addStartupSystem(({ spawn, getResource }) => {
+    spawn(createSprite(50, 50, 30));
+    // spawn(createTile(100, 100, 30, 32));
+    // spawn(createTile(150, 150, 30, 32));
 })
 
 app.addSystem(({ getResource }) => {
-    const keyboard = app.getResource("keyboard");
+    const keyboard = getResource("keyboard");
     keyboard.tick();
 });
-
-app.addSystem((app) => {
-    const keyboard = app.getResource("keyboard");
-    const [sprite] = app.query((entity) => entity.kind === "sprite") as Sprite[];
-    if (keyboard.pressed("ArrowDown")) {
-        sprite.components.geometry.y += 4;
-    }
-    if (keyboard.pressed("ArrowUp")) {
-        sprite.components.geometry.y -= 4;
-    }
-    if (keyboard.pressed("ArrowRight")) {
-        sprite.components.geometry.x += 4;
-    }
-    if (keyboard.pressed("ArrowLeft")) {
-        sprite.components.geometry.x -= 4;
-    }
-})
-
+app.addSystem(respondToKeyboardInput);
+app.addSystem(updateEntityPositions);
 app.addSystem(drawVisibleEntities);
 
-function delay(millis: number) {
-    return new Promise((resolve) => {
-        setTimeout(resolve, millis);
-    });
-}
+app.run();
 
-(async () => {
-
-    app.run();
-
-})();
 
 
 

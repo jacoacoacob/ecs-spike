@@ -7,7 +7,9 @@ function createSprite(x: number, y: number, r: number) {
         kind: "sprite",
         id: randId(6),
         components: [
-            component.geometry({ kind: "circle", x, y, r }),
+            component.transform(x, y),
+            component.radius(r),
+            component.velocity(),
             component.style({
                 fillStyle: "blue",
                 strokeStyle: "pink",

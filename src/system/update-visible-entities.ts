@@ -1,8 +1,8 @@
 import { World, Tile, Sprite } from "../entity";
 import { selectWorld, selectTiles, selectSprites } from "../selector";
-import { SystemParams } from "./types";
+import type { AppSystemParams } from "./types";
 
-function updateVisibleEntities({ query }: SystemParams) {
+function updateVisibleEntities({ query }: AppSystemParams) {
     const [world] = query(selectWorld) as [World];
     const tiles = query(selectTiles) as Tile[];
     const sprites = query(selectSprites) as Sprite[];

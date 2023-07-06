@@ -7,7 +7,8 @@ function createTile(x: number, y: number, w: number, h: number) {
         kind: "tile",
         id: randId(6),
         components: [
-            component.geometry({ kind: "rect", x, y, w, h }),
+            component.transform(x, y),
+            component.rectSize(w, h),
             component.style({
                 fillStyle: "orange",
             }),
