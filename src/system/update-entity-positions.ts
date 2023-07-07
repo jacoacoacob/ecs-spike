@@ -11,14 +11,19 @@ function updateEntityPositions({ query, getResource }: AppSystemParams) {
     ) as EntityWith<Transform | Velocity>[];
 
     moveable.forEach((entity) => {
-        transformationManager.add({
-            entityId: entity.id,
-            translation: {
-                x: entity.components.transform.translation.x + entity.components.velocity.dx,
-                y: entity.components.transform.translation.y + entity.components.velocity.dy,
-                z: 0,
-            },
-        });
+        if (
+            entity.components.velocity.dx !== 0 ||
+            entity.components.velocity.dy !== 0
+        ) {
+            transformationManager.add({
+                entityId: entity.id,
+                translation: {
+                    x: entity.components.transform.translation.x + entity.components.velocity.dx,
+                    y: entity.components.transform.translation.y + entity.components.velocity.dy,
+                    z: 0,
+                },
+            });
+        }
     });
 }
 

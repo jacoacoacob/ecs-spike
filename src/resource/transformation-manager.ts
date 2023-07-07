@@ -30,4 +30,4 @@ function transformationManager() {
 type TransformationManager = ReturnType<typeof transformationManager>;
 
 export { transformationManager };
-export type { TransformationManager };
+export type { TransformationManager, Transformation };

@@ -1,4 +1,3 @@
-import { App } from "./app";
 import type { Component } from "./component";
 
 interface Entity<Kind extends string, Comp extends Component<string, any>> {

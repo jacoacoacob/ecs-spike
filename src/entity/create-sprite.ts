@@ -9,6 +9,7 @@ function createSprite(id?: string) {
         components: [
             component.parent(),
             component.transform(),
+            component.children(),
             component.size(),
             component.velocity(),
             component.style({

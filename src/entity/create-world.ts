@@ -9,9 +9,9 @@ function createWorld() {
         components: [
             component.children(),
             component.tileMap({
-                rows: 6,
-                cols: 9,
-                tileSize: 100,
+                rows: 4,
+                cols: 6,
+                tileSize: 140,
             }),
             component.camera({
                 viewport: {

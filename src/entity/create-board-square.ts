@@ -2,13 +2,13 @@ import { randId } from "../util/rand-id";
 import * as component from "../component";
 import { createEntity } from "../lib/entity";
 
-function createBoardSquare(parentId: string, ordering: number) {
+function createBoardSquare(ordering: number) {
     return createEntity({
         kind: "boardSquare",
         id: randId(6),
         components: [
             component.ordering(ordering),
-            component.parent(parentId),
+            component.parent(),
             component.children(),
             component.transform(),
             component.size(),
