@@ -1,5 +1,7 @@
-import { createSprite, createBoardSquare, createWorld, BoardSquare } from "../entity";
+
+import { createSprite, createBoardSquare, createWorld, type BoardSquare, parentChild } from "../entity";
 import { AppSystemParams } from "./types";
+
 
 function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
     const transformations = getResource("transformation-manager");
@@ -44,19 +46,21 @@ function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
     if (square) {
         const player = createSprite("p1");
 
+        parentChild(square, player);
+
         const c1 = createSprite();
         const c2 = createSprite();
 
-        c1.components.parent = player.id;
+        // parentChild(player, c1);
+        parentChild(player, c2);
+
         c1.components.size.w = 40;
         c1.components.size.h = 40;
 
-        // c2.components.parent = player.id;
         c2.components.size.w = 40;
         c2.components.size.h = 40;
 
-        // player.components.children = [c1.id, c2.id];
-        player.components.children = [c1.id];
+
         player.components.parent = square.id;
 
         player.components.size.w = 200;
@@ -83,7 +87,7 @@ function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
         transformations.add({
             entityId: c2.id,
             translation: {
-                x: 150,
+                x: player.components.size.w + 50,
                 y: 150,
                 z: 0,
             },

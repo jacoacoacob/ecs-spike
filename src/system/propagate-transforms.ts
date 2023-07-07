@@ -27,8 +27,6 @@ function propagateTransforms({ getResource, getEntityById }: AppSystemParams) {
         if (hasComponent<Children>(entity, ["children"])) {
             let stack = Array.from(entity.components.children);
 
-            console.log(stack)
-
             while (stack.length) {
                 const childId = stack.pop() as string;
 
