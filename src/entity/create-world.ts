@@ -2,11 +2,12 @@ import { randId } from "../util/rand-id";
 import * as component from "../component";
 import { createEntity } from "../lib/entity";
 
-function createWorld() {
+function createWorld(id?: string) {
     return createEntity({
         kind: "world",
-        id: randId(6),
+        id: id ?? randId(6),
         components: [
+            component.transform(),
             component.children(),
             component.tileMap({
                 rows: 4,

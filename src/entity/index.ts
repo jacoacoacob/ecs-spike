@@ -1,7 +1,7 @@
 export { createSprite } from "./create-sprite";
 export { createBoardSquare } from "./create-board-square";
 export { createWorld } from "./create-world";
-export { parentChild } from "./hierarchy";
+export { setParentChild, unsetParentChild } from "./parent-child";
 
 import type { Sprite } from "./create-sprite";
 import type { BoardSquare } from "./create-board-square";

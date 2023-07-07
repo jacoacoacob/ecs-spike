@@ -1,6 +1,6 @@
 import { App } from "./src/lib/app";
 import type { AppResource } from "./src/resource";
-import type { AppEntity } from "./src/entity";
+import { createSprite, type AppEntity, createBoardSquare, createWorld } from "./src/entity";
 import { keyboard } from "./src/resource/keyboard";
 import { canvas } from "./src/resource/canvas";
 import { transformationManager } from "./src/resource/transformation-manager";
@@ -18,6 +18,11 @@ const app = new App<AppResource, AppEntity>({
         canvas,
         transformationManager,
     ],
+    entityFactories: {
+        "boardSquare": createBoardSquare,
+        "sprite": createSprite,
+        "world": createWorld,
+    },
 });
 
 app.addStartupSystem(setupCanvasResize);

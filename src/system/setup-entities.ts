@@ -1,17 +1,15 @@
 
-import { createSprite, createBoardSquare, createWorld, type BoardSquare, parentChild } from "../entity";
+import { type BoardSquare, setParentChild } from "../entity";
 import { AppSystemParams } from "./types";
 
 
 function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
     const transformations = getResource("transformation-manager");
 
-    const world = createWorld();
+    const world = spawn("world", "world");
 
-    world.components.camera.translation.x = 100;
-    world.components.camera.translation.y = 100;
-
-    spawn(world);
+    world.components.transform.translation.x = 100;
+    world.components.transform.translation.y = 100;
 
     const { rows, cols, tileSize } = world.components.tileMap;
 
@@ -19,9 +17,9 @@ function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
         const row = Math.floor(i / cols);
         const col = i % cols;
 
-        const square = createBoardSquare(i);
-
-        square.components.parent = world.id;
+        const square = spawn("boardSquare");
+        
+        square.components.ordering = i;
 
         square.components.size.w = tileSize;
         square.components.size.h = tileSize;
@@ -34,8 +32,6 @@ function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
                 z: 0,
             }
         })
-
-        spawn(square);
     }
 
     const square = queryFirst<BoardSquare>((entity) =>
@@ -44,21 +40,27 @@ function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
     );
 
     if (square) {
-        const player = createSprite("p1");
 
-        parentChild(square, player);
+        const player = spawn("sprite", "p1");
 
-        const c1 = createSprite();
-        const c2 = createSprite();
+        setParentChild(square, player);
 
-        // parentChild(player, c1);
-        parentChild(player, c2);
+        const c1 = spawn("sprite", "c1");
+        const c2 = spawn("sprite", "c2");
 
-        c1.components.size.w = 40;
-        c1.components.size.h = 40;
+        const c1_1 = spawn("sprite", "c1_1");
 
-        c2.components.size.w = 40;
-        c2.components.size.h = 40;
+        c1_1.components.size.w = 40;
+        c1_1.components.size.h = 40;
+
+        setParentChild(c1, c1_1);
+        setParentChild(player, c2);
+
+        c1.components.size.w = 80;
+        c1.components.size.h = 80;
+
+        c2.components.size.w = 60;
+        c2.components.size.h = 60;
 
 
         player.components.parent = square.id;
@@ -93,9 +95,6 @@ function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
             },
         });
 
-        spawn(player);
-        spawn(c1);
-        spawn(c2);
     }
 }
 

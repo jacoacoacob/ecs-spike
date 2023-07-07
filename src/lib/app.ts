@@ -6,11 +6,18 @@ import type { System } from "./system";
 
 type Plugin<App> = (app: App) => void;
 
+type EntityFactories<
+    AppEntity extends Entity<string, Component<string, any>>
+> = {
+    [E in AppEntity as E["kind"]]: (id?: string) => E;
+}
+
 interface AppParams<
     AppResource extends Resource<string, any>,
     AppEntity extends Entity<string, Component<string, any>>
 > {
     resources: (() => AppResource)[];
+    entityFactories: EntityFactories<AppEntity>;
     plugins?: Plugin<App<AppResource, AppEntity>>[];
 }
 
@@ -31,19 +38,23 @@ class App<
     private _systems: (() => void)[] = [];
     private _resources: Resources<AppResource> = {} as Resources<AppResource>;
     private _entities: Entities<AppEntity> = {} as Entities<AppEntity>;
+    private _entityFactories = {} as EntityFactories<AppEntity>;
 
     private get _systemParams() {
         return {
+            getEntityById: this.getEntityById.bind(this),
             getResource: this.getResource.bind(this),
-            spawn: this.spawn.bind(this),
             query: this.query.bind(this),
             queryFirst: this.queryFirst.bind(this),
-            getEntityById: this.getEntityById.bind(this),
+            spawn: this.spawn.bind(this),
+            unspawn: this.unspawn.bind(this),
         };
     }
 
     constructor(params: AppParams<AppResource, AppEntity>) {
-        const { resources, plugins } = params;
+        const { resources, plugins, entityFactories } = params;
+
+        this._entityFactories = entityFactories;
 
         this._resources = resources.reduce(
             (accum: Resources<AppResource>, resource_) => {
@@ -59,8 +70,17 @@ class App<
         });
     }
 
-    spawn(entity: AppEntity) {
+    spawn<Kind extends AppEntity["kind"]>(
+        kind: Kind,
+        id?: string
+    ): ReturnType<EntityFactories<AppEntity>[Kind]>{
+        const entity = this._entityFactories[kind](id);
         this._entities[entity.id] = entity;
+        return entity;
+    }
+
+    unspawn(entityId: string) {
+        delete this._entities[entityId];
     }
 
     getEntityById(entityId: string): AppEntity | undefined {
