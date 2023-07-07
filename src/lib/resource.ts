@@ -1,5 +1,5 @@
 
-interface Resource<Name extends string, Data> {
+interface Resource<Name extends string, Data extends any> {
     name: Name;
     data: Data;
 }
@@ -11,7 +11,7 @@ interface ResourceParams<Name extends string, Data> {
 
 function createResource<
     Name extends string,
-    Data
+    Data extends any
 >(params: ResourceParams<Name, Data>): Resource<Name, Data> {
     const { name, setup } = params;
 

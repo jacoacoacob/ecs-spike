@@ -23,7 +23,6 @@ function keyboard() {
     return createResource({
         name: "keyboard",
         setup() {
-
             const _justPressed = Object.fromEntries(KEYS.map((key) => [key, false])) as Record<Key, boolean>;
             const _pressed = Object.fromEntries(KEYS.map((key) => [key, { timestamp: 0 }])) as Record<Key, KeyPressInfo> 
             const _justReleased = Object.fromEntries(KEYS.map((key) => [key, false])) as Record<Key, boolean>;

@@ -2,12 +2,12 @@ import { randId } from "../util/rand-id";
 import * as component from "../component";
 import { createEntity } from "../lib/entity";
 
-function createSprite(parentId: string) {
+function createSprite(id?: string) {
     return createEntity({
         kind: "sprite",
-        id: randId(6),
+        id: id ?? randId(6),
         components: [
-            component.parent(parentId),
+            component.parent(),
             component.transform(),
             component.size(),
             component.velocity(),

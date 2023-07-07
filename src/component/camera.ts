@@ -1,15 +1,10 @@
 import type { Component } from "../lib/component";
+import { Translation } from "./transform";
 
 type Camera = Component<"camera", {
-    translation: {
-        x: number;
-        y: number;
-    };
+    translation: Translation;
     viewport: {
-        translation: {
-            x: number;
-            y: number;
-        };
+        translation: Translation;
         size: {
             w: number;
             h: number;
@@ -19,15 +14,9 @@ type Camera = Component<"camera", {
 }>;
 
 type CameraOptions = Partial<{
-    translation: Partial<{
-        x: number;
-        y: number;
-    }>;
+    translation: Partial<Translation>;
     viewport: Partial<{
-        translation: Partial<{
-            x: number;
-            y: number;
-        }>;
+        translation: Partial<Translation>;
         size: Partial<{
             w: number;
             h: number;
@@ -42,11 +31,13 @@ function camera(value?: CameraOptions): Camera {
             translation: {
                 x: value?.translation?.x ?? 0,
                 y: value?.translation?.y ?? 0,
+                z: value?.translation?.z ?? 0,
             },
             viewport: {
                 translation: {
                     x: value?.viewport?.translation?.x ?? 0,
                     y: value?.viewport?.translation?.y ?? 0,
+                    z: value?.translation?.z ?? 0,
                 },
                 size: {
                     w: value?.viewport?.size?.w ?? 0,

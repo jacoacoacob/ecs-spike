@@ -1,22 +1,30 @@
 import { Component } from "../lib/component";
 
+interface Translation {
+    x: number;
+    y: number;
+    z: number;
+}
+
 type Transform = Component<"transform", {
-    translation: {
-        x: number;
-        y: number;
-        z: number;
-    };
+    translationGlobal: Translation;
+    translation: Translation;
     scale: number;
 }>;
 
-function transform(x?: number, y?: number, z?: number): Transform {
+function transform(): Transform {
     return {
         kind: "transform",
         value: {
+            translationGlobal: {
+                x: 0,
+                y: 0,
+                z: 0,
+            },
             translation: {
-                x: x ?? 0,
-                y: y ?? 0,
-                z: z ?? 0,
+                x: 0,
+                y: 0,
+                z: 0,
             },
             scale: 1,
         },
@@ -24,4 +32,4 @@ function transform(x?: number, y?: number, z?: number): Transform {
 }
 
 export { transform };
-export type { Transform };
+export type { Transform, Translation };

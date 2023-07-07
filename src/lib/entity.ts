@@ -1,3 +1,4 @@
+import { App } from "./app";
 import type { Component } from "./component";
 
 interface Entity<Kind extends string, Comp extends Component<string, any>> {
@@ -16,7 +17,7 @@ interface EntityOptions<Kind extends string, Comp extends Component<string, any>
 
 type EntityWith<Comp extends Component<string, any>> = Entity<string, Comp>;
 
-function withComponent<Comp extends Component<string, any>>(
+function hasComponent<Comp extends Component<string, any>>(
     entity: EntityWith<any>,
     componentKinds: Comp["kind"][]
 ): entity is EntityWith<Comp> {
@@ -46,5 +47,5 @@ function createEntity<Kind extends string, Comp extends Component<string, any>>(
     }
 }
 
-export { createEntity, withComponent };
+export { createEntity, hasComponent };
 export type { Entity, EntityWith };

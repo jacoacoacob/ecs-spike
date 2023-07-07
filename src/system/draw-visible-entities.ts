@@ -22,7 +22,7 @@ function drawVisibleEntities({ getResource, query }: SystemParams<App<AppResourc
             }
         } = squares[i];
         const { w, h } = size;
-        const { x, y }= transform.translation;
+        const { x, y } = transform.translation;
         ctx.beginPath();
         ctx.rect(x, y, w, h);
         ctx.fillStyle = fillStyle;

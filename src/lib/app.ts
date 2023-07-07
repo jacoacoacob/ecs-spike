@@ -1,4 +1,3 @@
-
 import { animationLoop } from "./animation-loop";
 import { Component } from "./component";
 import { Entity } from "./entity";
@@ -39,6 +38,7 @@ class App<
             spawn: this.spawn.bind(this),
             query: this.query.bind(this),
             queryFirst: this.queryFirst.bind(this),
+            getEntityById: this.getEntityById.bind(this),
         };
     }
 
@@ -61,6 +61,10 @@ class App<
 
     spawn(entity: AppEntity) {
         this._entities[entity.id] = entity;
+    }
+
+    getEntityById(entityId: string): AppEntity | undefined {
+        return this._entities[entityId];
     }
 
     query<E extends AppEntity>(selector: (entity: E) => boolean): E[] {
