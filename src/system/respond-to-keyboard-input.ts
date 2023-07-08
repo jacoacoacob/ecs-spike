@@ -79,16 +79,18 @@ function moveCamera(world: World, keyboard: Keyboard["data"]) {
     const maxOffsetX = cols * tileSize - camera.viewport.size.w;
     const maxOffsetY = rows * tileSize - camera.viewport.size.h;
 
+    const CAMERA_SPEED = 10;
+
     const dirX = left.timestamp > right.timestamp
-        ? -4
+        ? -CAMERA_SPEED
         : left.timestamp < right.timestamp
-            ? 4
+            ? CAMERA_SPEED
             : 0;
 
     const dirY = up.timestamp > down.timestamp
-        ? -4
+        ? -CAMERA_SPEED
         : up.timestamp < down.timestamp
-            ? 4
+            ? CAMERA_SPEED
             : 0;
     
     const newOffsetX = Math.max(0, Math.min(camera.offsetX + dirX, maxOffsetX));

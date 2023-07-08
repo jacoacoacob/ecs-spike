@@ -15,8 +15,8 @@ function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
 
     world.components.camera.viewport = {
         position: {
-            x: 100,
-            y: 100,
+            x: 20,
+            y: 20,
         },
         size: {
             w: 900,
@@ -49,7 +49,7 @@ function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
 
     const square = queryFirst<BoardSquare>((entity) =>
         entity.kind === "boardSquare" &&
-        entity.components.ordering === 14
+        entity.components.ordering === 11
     );
 
     if (square) {
