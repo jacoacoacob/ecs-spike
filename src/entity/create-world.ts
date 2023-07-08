@@ -7,21 +7,13 @@ function createWorld(id?: string) {
         kind: "world",
         id: id ?? randId(6),
         components: [
-            component.transform(),
             component.children(),
             component.tileMap({
-                rows: 4,
-                cols: 6,
-                tileSize: 140,
+                rows: 0,
+                cols: 0,
+                tileSize: 0,
             }),
-            component.camera({
-                viewport: {
-                    size: {
-                        w: 600,
-                        h: 400,
-                    },
-                },
-            }),
+            component.camera(),
         ],
     });
 }

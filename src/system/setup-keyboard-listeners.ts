@@ -8,14 +8,22 @@ function setupKeyboardListeners(params: SystemParams<App<AppResource, AppEntity>
     const keyboard = params.getResource("keyboard");
 
     window.addEventListener("keydown", (ev) => {
-        if (isKey(ev.key)) {
-            keyboard.press(ev.key);
+        let key = ev.key;
+        if (/^\w$/.test(key)) {
+            key = key.toLowerCase();
+        }
+        if (isKey(key)) {
+            keyboard.press(key);
         }
     });
 
     window.addEventListener("keyup", (ev) => {
-        if (isKey(ev.key)) {
-            keyboard.release(ev.key);
+        let key = ev.key;
+        if (/^\w$/.test(key)) {
+            key = key.toLowerCase();
+        }
+        if (isKey(key)) {
+            keyboard.release(key);
         }
     });
 }

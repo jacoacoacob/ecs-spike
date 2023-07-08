@@ -1,10 +1,11 @@
 import { App } from "../lib/app";
 import type { SystemParams } from "../lib/system";
 import type { AppResource } from "../resource";
-import type { AppEntity, BoardSquare, Sprite } from "../entity";
+import type { AppEntity, BoardSquare, Sprite, World } from "../entity";
 
-function drawVisibleEntities({ getResource, query }: SystemParams<App<AppResource, AppEntity>>) {
+function drawVisibleEntities({ getResource, query, getEntityById }: SystemParams<App<AppResource, AppEntity>>) {
     const { ctx } = getResource("canvas");
+
     const sprites = query(entity => entity.kind === "sprite") as Sprite[];
     const squares = query(entity => entity.kind === "boardSquare") as BoardSquare[];
 

@@ -3,7 +3,7 @@ import type { AppResource } from "./src/resource";
 import { createSprite, type AppEntity, createBoardSquare, createWorld } from "./src/entity";
 import { keyboard } from "./src/resource/keyboard";
 import { canvas } from "./src/resource/canvas";
-import { transformationManager } from "./src/resource/transformation-manager";
+import { transformations } from "./src/resource/transformations";
 import { setupKeyboardListeners } from "./src/system/setup-keyboard-listeners";
 import { setupCanvasResize } from "./src/system/setup-canvas-resize";
 import { drawVisibleEntities } from "./src/system/draw-visible-entities";
@@ -16,7 +16,7 @@ const app = new App<AppResource, AppEntity>({
     resources: [
         keyboard,
         canvas,
-        transformationManager,
+        transformations,
     ],
     entityFactories: {
         "boardSquare": createBoardSquare,

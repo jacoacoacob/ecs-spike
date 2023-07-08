@@ -2,14 +2,27 @@
 import { type BoardSquare, setParentChild } from "../entity";
 import { AppSystemParams } from "./types";
 
-
 function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
-    const transformations = getResource("transformation-manager");
+    const transformations = getResource("transformations");
 
     const world = spawn("world", "world");
 
-    world.components.transform.translation.x = 100;
-    world.components.transform.translation.y = 100;
+    world.components.tileMap = {
+        tileSize: 200,
+        rows: 6,
+        cols: 9,
+    };
+
+    world.components.camera.viewport = {
+        position: {
+            x: 100,
+            y: 100,
+        },
+        size: {
+            w: 900,
+            h: 600,
+        },
+    };
 
     const { rows, cols, tileSize } = world.components.tileMap;
 
@@ -24,7 +37,7 @@ function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
         square.components.size.w = tileSize;
         square.components.size.h = tileSize;
 
-        transformations.add({
+        transformations.push({
             entityId: square.id,
             translation: {
                 x: 20 + col * tileSize + col * 8,
@@ -40,7 +53,6 @@ function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
     );
 
     if (square) {
-
         const player = spawn("sprite", "p1");
 
         setParentChild(square, player);
@@ -54,6 +66,7 @@ function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
         c1_1.components.size.h = 40;
 
         setParentChild(c1, c1_1);
+        setParentChild(player, c1)
         setParentChild(player, c2);
 
         c1.components.size.w = 80;
@@ -62,22 +75,10 @@ function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
         c2.components.size.w = 60;
         c2.components.size.h = 60;
 
-
-        player.components.parent = square.id;
-
         player.components.size.w = 200;
         player.components.size.h = 200;
 
-        transformations.add({
-            entityId: player.id,
-            translation: {
-                x: 40,
-                y: 40,
-                z: 0,
-            }
-        });
-
-        transformations.add({
+        transformations.push({
             entityId: c1.id,
             translation: {
                 x: 50,
@@ -86,7 +87,7 @@ function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
             },
         });
 
-        transformations.add({
+        transformations.push({
             entityId: c2.id,
             translation: {
                 x: player.components.size.w + 50,

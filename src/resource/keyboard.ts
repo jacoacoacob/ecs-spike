@@ -6,6 +6,10 @@ const KEYS = [
     "ArrowLeft",
     "ArrowRight",
     "ArrowUp",
+    "a",
+    "s",
+    "d",
+    "w",
 ] as const;
 
 type Key = typeof KEYS[number];

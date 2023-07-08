@@ -1,14 +1,12 @@
 import { type EntityWith, hasComponent } from "../lib/entity";
 import type { Children } from "../component/children";
 import type { Transform } from "../component/transform";
-import type { Transformation } from "../resource/transformation-manager";
+import type { Transformation } from "../resource/transformations";
 import type { AppEntity } from "../entity";
 import type { AppSystemParams } from "./types";
 
 function propagateTransforms({ getResource, getEntityById }: AppSystemParams) {
-    const { items } = getResource("transformation-manager");
-
-    const transformations = items();
+    const transformations = getResource("transformations");
 
     while (transformations.length) {
         const { entityId, translation } = transformations.shift() as Transformation;
