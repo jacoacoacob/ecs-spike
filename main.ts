@@ -1,6 +1,6 @@
 import { App } from "./src/lib/app";
 import type { AppResource } from "./src/resource";
-import { createSprite, type AppEntity, createBoardSquare, createWorld } from "./src/entity";
+import { createSprite, type AppEntity, createBoardSquare, createWorld, createCamera } from "./src/entity";
 import { keyboard } from "./src/resource/keyboard";
 import { canvas } from "./src/resource/canvas";
 import { transformations } from "./src/resource/transformations";
@@ -22,6 +22,7 @@ const app = new App<AppResource, AppEntity>({
         "boardSquare": createBoardSquare,
         "sprite": createSprite,
         "world": createWorld,
+        "camera": createCamera,
     },
 });
 

@@ -1,9 +1,9 @@
 import type { EntityWith } from "../lib/entity";
-import type { Sprite, World } from "../entity";
+import type { Sprite, World, Camera } from "../entity";
 import type { Velocity } from "../component/velocity";
 import type { AppSystemParams } from "./types";
-import { Keyboard } from "../resource/keyboard";
-import { Camera } from "../component/camera";
+import { Keyboard, whichDirection } from "../resource/keyboard";
+import { Size } from "../component/size";
 
 function accel(
     entity: EntityWith<Velocity>,
@@ -66,60 +66,96 @@ function accelerateSprite(sprite: Sprite, keyboard: Keyboard["data"]) {
     }
 }
 
-function moveCamera(world: World, keyboard: Keyboard["data"]) {
+const MAX_CAMERA_SPEED = 10;
+
+function moveCamera(world: World, camera: Camera, keyboard: Keyboard["data"]) {
     const up = keyboard.pressed("w");
     const down = keyboard.pressed("s");
     const left = keyboard.pressed("a");
     const right = keyboard.pressed("d");
 
-    const { rows, cols, tileSize } = world.components.tileMap;
+    const dy = whichDirection(up, down, MAX_CAMERA_SPEED);
+    const dx = whichDirection(right, left, MAX_CAMERA_SPEED);
 
-    const camera = world.components.camera;
+    // TODO: Move below logic to a physics system or something.
+    // This system should not need to be so 'world-aware'
+    const { cols, rows, tileSize } = world.components.tileMap;
+    const { translation } = camera.components.transform;
+    const { w: viewportWidth, h: viewportHeight } = camera.components.size;
 
-    const maxOffsetX = cols * tileSize - camera.viewport.size.w;
-    const maxOffsetY = rows * tileSize - camera.viewport.size.h;
+    const maxTranslationX = cols * tileSize - viewportWidth;
+    const maxTranslationY = rows * tileSize - viewportHeight;
 
-    const CAMERA_SPEED = 10;
-
-    const dirX = left.timestamp > right.timestamp
-        ? -CAMERA_SPEED
-        : left.timestamp < right.timestamp
-            ? CAMERA_SPEED
-            : 0;
-
-    const dirY = up.timestamp > down.timestamp
-        ? -CAMERA_SPEED
-        : up.timestamp < down.timestamp
-            ? CAMERA_SPEED
-            : 0;
-    
-    const newOffsetX = Math.max(0, Math.min(camera.offsetX + dirX, maxOffsetX));
-    const newOffsetY = Math.max(0, Math.min(camera.offsetY + dirY, maxOffsetY));
-
-    let isUpdated = false;
-
-    if (newOffsetX !== camera.offsetX) {
-        isUpdated = true;
-        camera.offsetX = newOffsetX;
+    if (translation.x + dx > 0 && translation.x + dx <= maxTranslationX) {
+        camera.components.velocity.dx = dx;
+    }
+    else {
+        camera.components.velocity.dx = 0;
     }
 
-    if (newOffsetY !== camera.offsetY) {
-        isUpdated = true;
-        camera.offsetY = newOffsetY;
+    if (translation.y + dy >= 0 && translation.y + dy <= maxTranslationY) {
+        camera.components.velocity.dy = dy;
     }
-
-    if (isUpdated) {
-        console.log(camera)
+    else {
+        camera.components.velocity.dy = 0;
     }
 }
+
+// function moveCamera(world: World, keyboard: Keyboard["data"]) {
+//     const up = keyboard.pressed("w");
+//     const down = keyboard.pressed("s");
+//     const left = keyboard.pressed("a");
+//     const right = keyboard.pressed("d");
+
+//     const { rows, cols, tileSize } = world.components.tileMap;
+
+//     const camera = world.components.camera;
+
+//     const maxOffsetX = cols * tileSize - camera.viewport.size.w;
+//     const maxOffsetY = rows * tileSize - camera.viewport.size.h;
+
+//     const CAMERA_SPEED = 10;
+
+//     const dirX = left.timestamp > right.timestamp
+//         ? -CAMERA_SPEED
+//         : left.timestamp < right.timestamp
+//             ? CAMERA_SPEED
+//             : 0;
+
+//     const dirY = up.timestamp > down.timestamp
+//         ? -CAMERA_SPEED
+//         : up.timestamp < down.timestamp
+//             ? CAMERA_SPEED
+//             : 0;
+    
+//     const newOffsetX = Math.max(0, Math.min(camera.offsetX + dirX, maxOffsetX));
+//     const newOffsetY = Math.max(0, Math.min(camera.offsetY + dirY, maxOffsetY));
+
+//     let isUpdated = false;
+
+//     if (newOffsetX !== camera.offsetX) {
+//         isUpdated = true;
+//         camera.offsetX = newOffsetX;
+//     }
+
+//     if (newOffsetY !== camera.offsetY) {
+//         isUpdated = true;
+//         camera.offsetY = newOffsetY;
+//     }
+
+//     if (isUpdated) {
+//         console.log(camera)
+//     }
+// }
 
 function respondToKeyboardInput({ getResource, getEntityById }: AppSystemParams) {
     const keyboard = getResource("keyboard");
     const p1 = getEntityById("p1") as Sprite;
     const world = getEntityById("world") as World;
+    const boardCam = getEntityById("boardCam") as Camera;
     
     accelerateSprite(p1, keyboard);
-    moveCamera(world, keyboard);
+    moveCamera(world, boardCam, keyboard);
 }
 
 export { respondToKeyboardInput };

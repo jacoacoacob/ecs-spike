@@ -1,6 +1,5 @@
 import type { Component } from "../lib/component";
 import { Size } from "./size";
-import { Translation } from "./transform";
 
 interface Viewport {
     position: {

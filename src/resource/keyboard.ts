@@ -22,6 +22,16 @@ interface KeyPressInfo {
 function isKey(data: string): data is Key {
     return KEYS.includes(data as Key);
 }
+
+function whichDirection(dirNeg: KeyPressInfo, dirPos: KeyPressInfo, value: number) {
+    if (dirPos.timestamp > dirNeg.timestamp) {
+        return value;
+    }
+    if (dirPos.timestamp < dirNeg.timestamp) {
+        return -value;
+    }
+    return 0;
+}
     
 function keyboard() {
     return createResource({
@@ -92,5 +102,5 @@ function keyboard() {
 
 type Keyboard = ReturnType<typeof keyboard>;
 
-export { keyboard, isKey };
+export { keyboard, isKey, whichDirection };
 export type { Keyboard };

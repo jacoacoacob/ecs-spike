@@ -6,6 +6,18 @@ function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
     const transformations = getResource("transformations");
 
     const world = spawn("world", "world");
+    const boardCam = spawn("camera", "boardCam");
+
+    boardCam.components.transform.translation = {
+        x: 20,
+        y: 20,
+        z: 0,
+    };
+
+    boardCam.components.size = {
+        w: 900,
+        h: 600,
+    };
 
     world.components.tileMap = {
         tileSize: 200,
