@@ -2,22 +2,11 @@
 import { type BoardSquare, setParentChild } from "../entity";
 import { AppSystemParams } from "./types";
 
+
 function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
     const transformations = getResource("transformations");
 
     const world = spawn("world", "world");
-    const boardCam = spawn("camera", "boardCam");
-
-    boardCam.components.transform.translation = {
-        x: 20,
-        y: 20,
-        z: 0,
-    };
-
-    boardCam.components.size = {
-        w: 900,
-        h: 600,
-    };
 
     world.components.tileMap = {
         tileSize: 200,
@@ -25,16 +14,18 @@ function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
         cols: 9,
     };
 
-    world.components.camera.viewport = {
-        position: {
-            x: 20,
-            y: 20,
-        },
-        size: {
-            w: 900,
-            h: 600,
-        },
+    const boardCam = spawn("camera", "boardCam");
+
+    boardCam.components.camera.viewport.position = {
+        x: 120,
+        y: 20,
     };
+
+    boardCam.components.camera.viewport.size = {
+        w: 1000,
+        h: 600,
+    };
+
 
     const { rows, cols, tileSize } = world.components.tileMap;
 
@@ -52,8 +43,8 @@ function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
         transformations.push({
             entityId: square.id,
             translation: {
-                x: 20 + col * tileSize + col * 8,
-                y: 20 + row * tileSize + row * 8,
+                x: col * tileSize,
+                y: row * tileSize,
                 z: 0,
             }
         })

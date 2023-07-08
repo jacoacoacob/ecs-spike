@@ -2,8 +2,8 @@ import type { EntityWith } from "../lib/entity";
 import type { Sprite, World, Camera } from "../entity";
 import type { Velocity } from "../component/velocity";
 import type { AppSystemParams } from "./types";
-import { Keyboard, whichDirection } from "../resource/keyboard";
-import { Size } from "../component/size";
+import { type Keyboard, whichDirection } from "../resource/keyboard";
+
 
 function accel(
     entity: EntityWith<Velocity>,
@@ -75,18 +75,18 @@ function moveCamera(world: World, camera: Camera, keyboard: Keyboard["data"]) {
     const right = keyboard.pressed("d");
 
     const dy = whichDirection(up, down, MAX_CAMERA_SPEED);
-    const dx = whichDirection(right, left, MAX_CAMERA_SPEED);
+    const dx = whichDirection(left, right, MAX_CAMERA_SPEED);
 
     // TODO: Move below logic to a physics system or something.
     // This system should not need to be so 'world-aware'
     const { cols, rows, tileSize } = world.components.tileMap;
     const { translation } = camera.components.transform;
-    const { w: viewportWidth, h: viewportHeight } = camera.components.size;
+    const { w: viewportWidth, h: viewportHeight } = camera.components.camera.viewport.size;
 
     const maxTranslationX = cols * tileSize - viewportWidth;
     const maxTranslationY = rows * tileSize - viewportHeight;
 
-    if (translation.x + dx > 0 && translation.x + dx <= maxTranslationX) {
+    if (translation.x + dx >= 0 && translation.x + dx <= maxTranslationX) {
         camera.components.velocity.dx = dx;
     }
     else {
@@ -100,53 +100,6 @@ function moveCamera(world: World, camera: Camera, keyboard: Keyboard["data"]) {
         camera.components.velocity.dy = 0;
     }
 }
-
-// function moveCamera(world: World, keyboard: Keyboard["data"]) {
-//     const up = keyboard.pressed("w");
-//     const down = keyboard.pressed("s");
-//     const left = keyboard.pressed("a");
-//     const right = keyboard.pressed("d");
-
-//     const { rows, cols, tileSize } = world.components.tileMap;
-
-//     const camera = world.components.camera;
-
-//     const maxOffsetX = cols * tileSize - camera.viewport.size.w;
-//     const maxOffsetY = rows * tileSize - camera.viewport.size.h;
-
-//     const CAMERA_SPEED = 10;
-
-//     const dirX = left.timestamp > right.timestamp
-//         ? -CAMERA_SPEED
-//         : left.timestamp < right.timestamp
-//             ? CAMERA_SPEED
-//             : 0;
-
-//     const dirY = up.timestamp > down.timestamp
-//         ? -CAMERA_SPEED
-//         : up.timestamp < down.timestamp
-//             ? CAMERA_SPEED
-//             : 0;
-    
-//     const newOffsetX = Math.max(0, Math.min(camera.offsetX + dirX, maxOffsetX));
-//     const newOffsetY = Math.max(0, Math.min(camera.offsetY + dirY, maxOffsetY));
-
-//     let isUpdated = false;
-
-//     if (newOffsetX !== camera.offsetX) {
-//         isUpdated = true;
-//         camera.offsetX = newOffsetX;
-//     }
-
-//     if (newOffsetY !== camera.offsetY) {
-//         isUpdated = true;
-//         camera.offsetY = newOffsetY;
-//     }
-
-//     if (isUpdated) {
-//         console.log(camera)
-//     }
-// }
 
 function respondToKeyboardInput({ getResource, getEntityById }: AppSystemParams) {
     const keyboard = getResource("keyboard");
