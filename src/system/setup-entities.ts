@@ -17,12 +17,12 @@ function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
     const boardCam = spawn("camera", "boardCam");
 
     boardCam.components.camera.viewport.position = {
-        x: 120,
+        x: 20,
         y: 20,
     };
 
     boardCam.components.camera.viewport.size = {
-        w: 1000,
+        w: 800,
         h: 600,
     };
 
