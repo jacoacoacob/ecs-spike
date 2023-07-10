@@ -83,8 +83,10 @@ function moveCamera(world: World, camera: Camera, keyboard: Keyboard["data"]) {
     const { translation } = camera.components.transform;
     const { w: viewportWidth, h: viewportHeight } = camera.components.camera.viewport.size;
 
-    const maxTranslationX = cols * tileSize - viewportWidth;
-    const maxTranslationY = rows * tileSize - viewportHeight;
+    const SCALE = camera.components.camera.projection.scale;
+
+    const maxTranslationX = cols * (tileSize / SCALE) - viewportWidth;
+    const maxTranslationY = rows * (tileSize / SCALE) - viewportHeight;
 
     if (translation.x + dx >= 0 && translation.x + dx <= maxTranslationX) {
         camera.components.velocity.dx = dx;

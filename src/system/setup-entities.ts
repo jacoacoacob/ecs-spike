@@ -43,7 +43,7 @@ function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
 
     boardCam.components.camera.viewport.size = {
         w: 1200,
-        h: 800,
+        h: 700,
     };
 
     boardCam.components.camera.projection.scale = 1;
