@@ -62,9 +62,5 @@ function getOverlap(r1: Rect, r2: Rect): Rect | null {
     return null;
 }
 
-function orthographicTransform() {
-    
-}
-
 export { isCollision, getOverlap, boundingRect };
 export type { Rect, BoundingRect };

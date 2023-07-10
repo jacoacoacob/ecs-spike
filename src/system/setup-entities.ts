@@ -1,6 +1,26 @@
 
+import { OrthographicProjection } from "../component/camera";
 import { type BoardSquare, setParentChild } from "../entity";
 import { AppSystemParams } from "./types";
+
+function createScaleInput(projection: OrthographicProjection) {
+    const scaleInput = document.createElement("input");
+
+    scaleInput.type = "number";
+    scaleInput.style.position = "absolute";
+    scaleInput.style.top = "8px";
+    scaleInput.style.right = "8px";
+
+    scaleInput.setAttribute("step", "0.1")
+    
+    scaleInput.value = projection.scale.toString();
+
+    scaleInput.addEventListener("input", (ev) => {
+        projection.scale = Number.parseFloat((ev.target as HTMLInputElement).value);
+    });
+
+    document.body.append(scaleInput);
+}
 
 
 function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
@@ -22,11 +42,13 @@ function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
     };
 
     boardCam.components.camera.viewport.size = {
-        w: 1400,
-        h: 720,
+        w: 1200,
+        h: 800,
     };
 
-    boardCam.components.transform.scale = .5;
+    boardCam.components.camera.projection.scale = 1;
+
+    createScaleInput(boardCam.components.camera.projection);
 
     const { rows, cols, tileSize } = world.components.tileMap;
 

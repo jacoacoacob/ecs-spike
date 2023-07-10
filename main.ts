@@ -12,6 +12,9 @@ import { updateEntityPositions } from "./src/system/update-entity-positions";
 import { setupEntities } from "./src/system/setup-entities";
 import { propagateTransforms } from "./src/system/propagate-transforms";
 
+// for sandboxing
+import "./src/util/proejction";
+
 const app = new App<AppResource, AppEntity>({
     resources: [
         keyboard,

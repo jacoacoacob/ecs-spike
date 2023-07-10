@@ -13,14 +13,14 @@ function propagateTransforms({ getResource, getEntityById }: AppSystemParams) {
 
         const entity = getEntityById(entityId) as EntityWith<Transform>;
 
-        const diffX = translation.x - entity.components.transform.translation.x;
-        const diffY = translation.y - entity.components.transform.translation.y;
+        const deltaX = Math.round(translation.x - entity.components.transform.translation.x);
+        const deltaY = Math.round(translation.y - entity.components.transform.translation.y)
 
-        entity.components.transform.translation.x += diffX;
-        entity.components.transform.translation.y += diffY;
+        entity.components.transform.translation.x += deltaX;
+        entity.components.transform.translation.y += deltaY;
 
-        entity.components.transform.translationGlobal.x += diffX;
-        entity.components.transform.translationGlobal.y += diffY;
+        entity.components.transform.translationGlobal.x += deltaX;
+        entity.components.transform.translationGlobal.y += deltaY;
 
         if (hasComponent<Children>(entity, ["children"])) {
             let stack = Array.from(entity.components.children);
@@ -31,8 +31,8 @@ function propagateTransforms({ getResource, getEntityById }: AppSystemParams) {
                 const childEntity = getEntityById(childId) as AppEntity;
 
                 if (hasComponent<Transform>(childEntity, ["transform"])) {
-                    childEntity.components.transform.translationGlobal.x += diffX;
-                    childEntity.components.transform.translationGlobal.y += diffY;
+                    childEntity.components.transform.translationGlobal.x += deltaX;
+                    childEntity.components.transform.translationGlobal.y += deltaY;
                 }
 
                 if (hasComponent<Children>(childEntity, ["children"])) {
