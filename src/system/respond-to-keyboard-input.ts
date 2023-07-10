@@ -30,7 +30,7 @@ function accel(
 
 const ACCEL = 0.2;
 const DECEL = 0.1;
-const MAX_VELOCITY = 8;
+const MAX_VELOCITY = 10;
 
 function accelerateSprite(sprite: Sprite, keyboard: Keyboard["data"]) {
     const arrowDown = keyboard.pressed("ArrowDown");

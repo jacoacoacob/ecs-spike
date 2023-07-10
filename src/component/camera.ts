@@ -1,4 +1,5 @@
 import type { Component } from "../lib/component";
+import { BoundingRect } from "../util/rect";
 import { Size } from "./size";
 
 interface Viewport {
@@ -9,10 +10,23 @@ interface Viewport {
     size: Size["value"];
 }
 
+/**
+ * @see https://docs.rs/bevy/latest/bevy/render/camera/struct.OrthographicProjection.html
+ */
+interface OrthographicProjection {
+    viewportOrigin: {
+        x: number;
+        y: number;
+    };
+    near: number;
+    far: number;
+    scale: number;
+    area: BoundingRect;
+}
+
 type Camera = Component<"camera", {
     viewport: Viewport;
-    offsetX: number;
-    offsetY: number;
+    projection: OrthographicProjection;
     order: number;
     isActive: boolean;
     visibleEntities: string[];
@@ -20,8 +34,6 @@ type Camera = Component<"camera", {
 
 type CameraOptions = Partial<{
     viewport: Partial<Viewport>;
-    offsetX: number;
-    offsetY: number;
     order: number;
     isActive: boolean;
 }>
@@ -31,8 +43,6 @@ function camera(value?: CameraOptions): Camera {
         kind: "camera",
         value: {
             visibleEntities: [],
-            offsetX: value?.offsetX ?? 0,
-            offsetY: value?.offsetY ?? 0,
             isActive: value?.isActive ?? false,
             order: value?.order ?? 0,
             viewport: {
@@ -45,6 +55,21 @@ function camera(value?: CameraOptions): Camera {
                     y: value?.viewport?.position?.y ?? 0,
                 },
             },
+            projection: {
+                near: 0,
+                far: 1000,
+                viewportOrigin: {
+                    x: 0.5,
+                    y: 0.5,
+                },
+                scale: 1,
+                area: {
+                    top: 0,
+                    right: 0,
+                    bottom: 0,
+                    left: 0,
+                }
+            }
         },
     };
 }

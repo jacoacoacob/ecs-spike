@@ -10,8 +10,8 @@ function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
 
     world.components.tileMap = {
         tileSize: 200,
-        rows: 6,
-        cols: 9,
+        rows: 12,
+        cols: 18,
     };
 
     const boardCam = spawn("camera", "boardCam");
@@ -22,10 +22,11 @@ function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
     };
 
     boardCam.components.camera.viewport.size = {
-        w: 800,
-        h: 600,
+        w: 1400,
+        h: 720,
     };
 
+    boardCam.components.transform.scale = .5;
 
     const { rows, cols, tileSize } = world.components.tileMap;
 
@@ -47,12 +48,12 @@ function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
                 y: row * tileSize,
                 z: 0,
             }
-        })
+        });
     }
 
     const square = queryFirst<BoardSquare>((entity) =>
         entity.kind === "boardSquare" &&
-        entity.components.ordering === 11
+        entity.components.ordering === 21
     );
 
     if (square) {
@@ -78,8 +79,8 @@ function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
         c2.components.size.w = 60;
         c2.components.size.h = 60;
 
-        player.components.size.w = 200;
-        player.components.size.h = 200;
+        player.components.size.w = 100;
+        player.components.size.h = 100;
 
         transformations.push({
             entityId: c1.id,

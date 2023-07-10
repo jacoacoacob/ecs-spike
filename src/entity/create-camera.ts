@@ -8,7 +8,6 @@ function createCamera(id?: string) {
         id: id ?? randId(6),
         components: [
             component.transform(),
-            component.size(),
             component.camera(),
             component.velocity(),
         ],
