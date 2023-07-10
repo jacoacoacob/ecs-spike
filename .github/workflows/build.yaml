@@ -42,7 +42,7 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2 
-        description: 'A GitHub Action to deploy an artifact as a GitHub Pages site'
+    description: 'A GitHub Action to deploy an artifact as a GitHub Pages site'
     author: 'GitHub'
     runs:
       using: 'node16'
