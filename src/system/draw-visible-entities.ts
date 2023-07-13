@@ -2,8 +2,9 @@ import { App } from "../lib/app";
 import type { SystemParams } from "../lib/system";
 import type { AppResource } from "../resource";
 import type { AppEntity, BoardSquare, Camera, Sprite } from "../entity";
-import { Rect, boundingRect, getOverlap } from "../util/rect";
-import { buildProjectionMatrix, matMultiply } from "../util/proejction";
+import { boundingRect } from "../util/rect";
+import { buildProjectionMatrix, buildRotationMatrix, buildScaleMatrix } from "../util/proejction";
+import { multiplyPoint, pipelineMat4 } from "../util/matrix";
 
 let count = 0;
 
@@ -17,18 +18,16 @@ function drawVisibleEntities({ getResource, query, getEntityById }: SystemParams
     const viewport = boardCam.components.camera.viewport;
 
     projection.area = boundingRect({
-        // x: boardCam.components.transform.translationGlobal.x * .5,
-        // y: boardCam.components.transform.translationGlobal.y * .5,
-        // w: boardCam.components.camera.viewport.size.w,
-        // h: boardCam.components.camera.viewport.size.h,
-
-        x: Math.round(boardCam.components.transform.translationGlobal.x * SCALE),
-        y: Math.round(boardCam.components.transform.translationGlobal.y * SCALE),
-        w: Math.round(boardCam.components.camera.viewport.size.w * SCALE),
-        h: Math.round(boardCam.components.camera.viewport.size.h * SCALE),
+        x: boardCam.components.transform.translationGlobal.x,
+        y: boardCam.components.transform.translationGlobal.y,
+        w: boardCam.components.camera.viewport.size.w,
+        h: boardCam.components.camera.viewport.size.h,
     })
 
-    const projectionMatrix = buildProjectionMatrix(projection);
+    const projectionMatrix = pipelineMat4([
+        buildScaleMatrix(SCALE, SCALE),
+        buildProjectionMatrix(projection),
+    ]);
 
     const sprites = query((entity) =>
         entity.kind === "boardSquare" ||
@@ -43,18 +42,18 @@ function drawVisibleEntities({ getResource, query, getEntityById }: SystemParams
         const { x, y } = sprite.components.transform.translationGlobal;
         const { w, h } = sprite.components.size;
 
-        const [viewLeft, viewTop] = matMultiply(projectionMatrix, [
+        const [viewLeft, viewTop] = multiplyPoint(projectionMatrix, [
             x,
             y,
             1,
             1,
         ]);
 
-        const [viewRight, viewBottom] = matMultiply(projectionMatrix, [
-            (x + w),
-            (y + h),
+        const [viewRight, viewBottom] = multiplyPoint(projectionMatrix, [
+            x + w,
+            y + h,
             1,
-            1 
+            1, 
         ]);
         
         const projX = Math.round((viewLeft - -1) * (viewport.size.w / 2));
@@ -76,19 +75,6 @@ function drawVisibleEntities({ getResource, query, getEntityById }: SystemParams
                     ? projH - (projY + projH - viewport.size.h)
                     : projH,
         };
-
-
-        // if (sprite.id === "p1" && count > 10000) {
-        //     // console.log({
-        //     //     viewLeft,
-        //     //     viewBottom,
-        //     //     viewRight,
-        //     //     viewTop,
-        //     //     ...projectedRect
-        //     // })
-        //     count = 0;
-        // }
-        // count += 1;
 
         const isVisible = projectedRect.w > 0 && projectedRect.h > 0;
 
