@@ -13,7 +13,7 @@ function createBoardSquare(id?: string) {
             component.transform(),
             component.size(),
             component.style({
-                fillStyle: "purple",
+                fillStyle: "navy",
                 strokeStyle: "orange",
             }),
         ],

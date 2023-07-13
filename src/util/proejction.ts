@@ -21,12 +21,12 @@ function buildProjectionMatrix(projection: OrthographicProjection) {
     ]);
 }
 
-function buildScaleMatrix(deltaW: number, deltaH: number) {
+function buildScaleMatrix(scale: number) {
     return createMat4([
-        deltaW, 0,      0, 0,
-        0,      deltaH, 0, 0,
-        0,      0,      1, 0,
-        0,      0,      0, 1,
+        scale, 0,     0, 0,
+        0,     scale, 0, 0,
+        0,     0,     1, 0,
+        0,     0,     0, 1,
     ])
 }
 

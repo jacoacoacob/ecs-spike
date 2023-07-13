@@ -13,8 +13,8 @@ function createSprite(id?: string) {
             component.size(),
             component.velocity(),
             component.style({
-                fillStyle: "blue",
-                strokeStyle: "pink",
+                fillStyle: "fuchsia",
+                strokeStyle: "cyan",
             }),
         ],
     });

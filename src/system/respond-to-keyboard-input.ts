@@ -105,18 +105,23 @@ function moveCamera(world: World, camera: Camera, keyboard: Keyboard["data"]) {
 
 function respondToKeyboardInput({ getResource, getEntityById }: AppSystemParams) {
     const keyboard = getResource("keyboard");
+    const transformations = getResource("transformations");
+
     const p1 = getEntityById("p1") as Sprite;
     const world = getEntityById("world") as World;
     const boardCam = getEntityById("boardCam") as Camera;
+    const miniMap = getEntityById("miniMap") as Camera;
     
     accelerateSprite(p1, keyboard);
     moveCamera(world, boardCam, keyboard);
 
     if (keyboard.justPressed("z")) {
         boardCam.components.camera.projection.scale += 0.1;
+        miniMap.components.camera.projection.scale += 0.1;
     }
     if (keyboard.justPressed("x")) {
         boardCam.components.camera.projection.scale -= 0.1;
+        miniMap.components.camera.projection.scale -= 0.1
     }
 }
 

@@ -10,6 +10,7 @@ function createScaleInput(projection: OrthographicProjection) {
     scaleInput.style.position = "absolute";
     scaleInput.style.top = "8px";
     scaleInput.style.right = "8px";
+    scaleInput.style.width = "50px"
 
     scaleInput.setAttribute("step", "0.1")
     
@@ -29,7 +30,7 @@ function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
     const world = spawn("world", "world");
 
     world.components.tileMap = {
-        tileSize: 100,
+        tileSize: 200,
         rows: 18,
         cols: 27,
     };
@@ -37,7 +38,7 @@ function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
     const boardCam = spawn("camera", "boardCam");
     const miniMap = spawn("camera", "miniMap");
 
-    setParentChild(boardCam, miniMap);
+    setParentChild(boardCam, miniMap)
 
     boardCam.components.camera.viewport.position = {
         x: 20,
@@ -45,11 +46,24 @@ function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
     };
 
     boardCam.components.camera.viewport.size = {
-        w: 1200,
-        h: 700,
+        w: 900,
+        h: 600,
     };
 
     boardCam.components.camera.projection.scale = 1;
+    
+    
+    miniMap.components.camera.viewport.position = {
+        x: 940,
+        y: 20
+    };
+    
+    miniMap.components.camera.viewport.size = {
+        w: 300,
+        h: 200
+    }
+    
+    miniMap.components.camera.projection.scale = 1;
 
     createScaleInput(boardCam.components.camera.projection);
 
@@ -78,7 +92,8 @@ function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
 
     const square = queryFirst<BoardSquare>((entity) =>
         entity.kind === "boardSquare" &&
-        entity.components.ordering === 86
+        entity.components.ordering === 29
+        // entity.components.ordering === 86
     );
 
     if (square) {
@@ -106,8 +121,8 @@ function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
         c2.components.size.w = 60;
         c2.components.size.h = 60;
 
-        player.components.size.w = 100;
-        player.components.size.h = 100;
+        player.components.size.w = 200;
+        player.components.size.h = 200;
 
         transformations.push({
             entityId: c1.id,

@@ -12,7 +12,6 @@ function renderBoardCam({ getResource, query, getEntityById }: SystemParams<App<
 
     const boardCam = getEntityById("boardCam") as Camera;
 
-    const SCALE = boardCam.components.camera.projection.scale;
     const projection = boardCam.components.camera.projection; 
     const viewport = boardCam.components.camera.viewport;
 
@@ -24,7 +23,7 @@ function renderBoardCam({ getResource, query, getEntityById }: SystemParams<App<
     })
 
     const projectionMatrix = pipelineMat4([
-        buildScaleMatrix(SCALE, SCALE),
+        buildScaleMatrix(projection.scale),
         buildProjectionMatrix(projection),
     ]);
 
@@ -38,7 +37,7 @@ function renderBoardCam({ getResource, query, getEntityById }: SystemParams<App<
     for (let i = 0; i < sprites.length; i++) {
         const sprite = sprites[i];
         
-        const { x, y, z } = sprite.components.transform.translationGlobal;
+        const { x, y } = sprite.components.transform.translationGlobal;
         const { w, h } = sprite.components.size;
 
         const [viewLeft, viewTop] = multiplyPoint(projectionMatrix, [
@@ -96,12 +95,17 @@ function renderBoardCam({ getResource, query, getEntityById }: SystemParams<App<
     }
 
     ctx.beginPath();
+    ctx.save();
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = "orange";
     ctx.strokeRect(
         viewport.position.x,
         viewport.position.y,
         viewport.size.w,
         viewport.size.h
-    )
+    );
+    ctx.restore();
+    ctx.closePath();
 }
 
 export { renderBoardCam };
