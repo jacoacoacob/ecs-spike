@@ -29,12 +29,15 @@ function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
     const world = spawn("world", "world");
 
     world.components.tileMap = {
-        tileSize: 200,
-        rows: 12,
-        cols: 18,
+        tileSize: 100,
+        rows: 18,
+        cols: 27,
     };
 
     const boardCam = spawn("camera", "boardCam");
+    const miniMap = spawn("camera", "miniMap");
+
+    setParentChild(boardCam, miniMap);
 
     boardCam.components.camera.viewport.position = {
         x: 20,
@@ -75,11 +78,13 @@ function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
 
     const square = queryFirst<BoardSquare>((entity) =>
         entity.kind === "boardSquare" &&
-        entity.components.ordering === 21
+        entity.components.ordering === 86
     );
 
     if (square) {
         const player = spawn("sprite", "p1");
+
+        player.components.transform.translationGlobal.z = 10
 
         setParentChild(square, player);
 
@@ -92,8 +97,8 @@ function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
         c1_1.components.size.h = 40;
 
         setParentChild(c1, c1_1);
-        setParentChild(player, c1)
-        setParentChild(player, c2);
+        // setParentChild(player, c1)
+        // setParentChild(player, c2);
 
         c1.components.size.w = 80;
         c1.components.size.h = 80;

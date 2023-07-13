@@ -10,6 +10,8 @@ function createCamera(id?: string) {
             component.transform(),
             component.camera(),
             component.velocity(),
+            component.parent(),
+            component.children(),
         ],
     });
 }

@@ -3,12 +3,11 @@ import type { SystemParams } from "../lib/system";
 import type { AppResource } from "../resource";
 import type { AppEntity, BoardSquare, Camera, Sprite } from "../entity";
 import { boundingRect } from "../util/rect";
-import { buildProjectionMatrix, buildRotationMatrix, buildScaleMatrix } from "../util/proejction";
+import { buildProjectionMatrix, buildScaleMatrix } from "../util/proejction";
 import { multiplyPoint, pipelineMat4 } from "../util/matrix";
 
-let count = 0;
 
-function drawVisibleEntities({ getResource, query, getEntityById }: SystemParams<App<AppResource, AppEntity>>) {
+function renderBoardCam({ getResource, query, getEntityById }: SystemParams<App<AppResource, AppEntity>>) {
     const { ctx } = getResource("canvas");
 
     const boardCam = getEntityById("boardCam") as Camera;
@@ -39,7 +38,7 @@ function drawVisibleEntities({ getResource, query, getEntityById }: SystemParams
     for (let i = 0; i < sprites.length; i++) {
         const sprite = sprites[i];
         
-        const { x, y } = sprite.components.transform.translationGlobal;
+        const { x, y, z } = sprite.components.transform.translationGlobal;
         const { w, h } = sprite.components.size;
 
         const [viewLeft, viewTop] = multiplyPoint(projectionMatrix, [
@@ -95,6 +94,14 @@ function drawVisibleEntities({ getResource, query, getEntityById }: SystemParams
             ctx.closePath();
         }
     }
+
+    ctx.beginPath();
+    ctx.strokeRect(
+        viewport.position.x,
+        viewport.position.y,
+        viewport.size.w,
+        viewport.size.h
+    )
 }
 
-export { drawVisibleEntities };
+export { renderBoardCam };
