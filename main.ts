@@ -12,6 +12,8 @@ import { updateEntityPositions } from "./src/system/update-entity-positions";
 import { setupEntities } from "./src/system/setup-entities";
 import { propagateTransforms } from "./src/system/propagate-transforms";
 
+import "./src/util/matrix";
+
 const app = new App<AppResource, AppEntity>({
     resources: [
         keyboard,

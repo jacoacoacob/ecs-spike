@@ -111,6 +111,14 @@ function respondToKeyboardInput({ getResource, getEntityById }: AppSystemParams)
     
     accelerateSprite(p1, keyboard);
     moveCamera(world, boardCam, keyboard);
+
+    if (keyboard.justPressed("z")) {
+        boardCam.components.camera.projection.scale -= 0.1;
+    }
+    if (keyboard.justPressed("x")) {
+        boardCam.components.camera.projection.scale += 0.1;
+
+    }
 }
 
 export { respondToKeyboardInput };

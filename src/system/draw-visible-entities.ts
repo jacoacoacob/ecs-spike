@@ -2,7 +2,7 @@ import { App } from "../lib/app";
 import type { SystemParams } from "../lib/system";
 import type { AppResource } from "../resource";
 import type { AppEntity, BoardSquare, Camera, Sprite } from "../entity";
-import { boundingRect, getOverlap } from "../util/rect";
+import { Rect, boundingRect, getOverlap } from "../util/rect";
 import { buildProjectionMatrix, matMultiply } from "../util/proejction";
 
 let count = 0;
@@ -14,15 +14,21 @@ function drawVisibleEntities({ getResource, query, getEntityById }: SystemParams
 
     const SCALE = boardCam.components.camera.projection.scale;
     const projection = boardCam.components.camera.projection; 
+    const viewport = boardCam.components.camera.viewport;
 
     projection.area = boundingRect({
-        x: boardCam.components.transform.translationGlobal.x * SCALE,
-        y: boardCam.components.transform.translationGlobal.y * SCALE,
-        w: boardCam.components.camera.viewport.size.w * SCALE,
-        h: boardCam.components.camera.viewport.size.h * SCALE,
+        // x: boardCam.components.transform.translationGlobal.x * .5,
+        // y: boardCam.components.transform.translationGlobal.y * .5,
+        // w: boardCam.components.camera.viewport.size.w,
+        // h: boardCam.components.camera.viewport.size.h,
+
+        x: Math.round(boardCam.components.transform.translationGlobal.x * SCALE),
+        y: Math.round(boardCam.components.transform.translationGlobal.y * SCALE),
+        w: Math.round(boardCam.components.camera.viewport.size.w * SCALE),
+        h: Math.round(boardCam.components.camera.viewport.size.h * SCALE),
     })
 
-    // const projMat = buildProjectionMatrix(projection);
+    const projectionMatrix = buildProjectionMatrix(projection);
 
     const sprites = query((entity) =>
         entity.kind === "boardSquare" ||
@@ -31,58 +37,71 @@ function drawVisibleEntities({ getResource, query, getEntityById }: SystemParams
 
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-    const viewportRect = {
-        x: boardCam.components.transform.translationGlobal.x,
-        y: boardCam.components.transform.translationGlobal.y,
-        w: boardCam.components.camera.viewport.size.w,
-        h: boardCam.components.camera.viewport.size.h,
-    };
-
     for (let i = 0; i < sprites.length; i++) {
         const sprite = sprites[i];
         
         const { x, y } = sprite.components.transform.translationGlobal;
         const { w, h } = sprite.components.size;
 
-        const sr = {
-            x: x / SCALE,
-            y: y / SCALE,
-            w: w / SCALE,
-            h: h / SCALE,
-        }
+        const [viewLeft, viewTop] = matMultiply(projectionMatrix, [
+            x,
+            y,
+            1,
+            1,
+        ]);
 
-        // const [viewLeft, viewTop] = matMultiply(projMat, [
-        //     sr.x,
-        //     sr.y,
-        //     1,
-        //     1,
-        // ]);
-
-        // const [viewRight, viewBottom] = matMultiply(projMat, [
-        //     sr.x + sr.w,
-        //     sr.y + sr.h,
-        //     1,
-        //     1
-        // ]);
-
-        const overlap = getOverlap(sr, viewportRect);
+        const [viewRight, viewBottom] = matMultiply(projectionMatrix, [
+            (x + w),
+            (y + h),
+            1,
+            1 
+        ]);
         
-        if (overlap) {
+        const projX = Math.round((viewLeft - -1) * (viewport.size.w / 2));
+        const projY = Math.round((1 - viewTop) * (viewport.size.h / 2));
+        const projW = Math.round((viewRight - viewLeft) * (viewport.size.w / 2));
+        const projH = Math.round((viewTop - viewBottom) * (viewport.size.h / 2));
+
+        const projectedRect = {
+            x: Math.max(0, projX),
+            y: Math.max(0, projY),
+            w: projX < 0
+                ? projW + projX
+                : projX + projW > viewport.size.w
+                    ? projW - (projX + projW - viewport.size.w)
+                    : projW,
+            h: projY < 0
+                ? projH + projY
+                : projY + projH > viewport.size.h
+                    ? projH - (projY + projH - viewport.size.h)
+                    : projH,
+        };
+
+
+        // if (sprite.id === "p1" && count > 10000) {
+        //     // console.log({
+        //     //     viewLeft,
+        //     //     viewBottom,
+        //     //     viewRight,
+        //     //     viewTop,
+        //     //     ...projectedRect
+        //     // })
+        //     count = 0;
+        // }
+        // count += 1;
+
+        const isVisible = projectedRect.w > 0 && projectedRect.h > 0;
+
+        if (isVisible) {
             const { fillStyle, strokeStyle } = sprite.components.style;
+            const { x, y, w, h } = projectedRect;
             ctx.beginPath();
             ctx.rect(
-                overlap.x - viewportRect.x + boardCam.components.camera.viewport.position.x,
-                overlap.y - viewportRect.y + boardCam.components.camera.viewport.position.y,
-                overlap.w,
-                overlap.h
+                x + viewport.position.x,
+                y + viewport.position.y,
+                w,
+                h,
             );
-            if (sprite.kind === "boardSquare") {
-                ctx.strokeText(
-                    sprite.components.ordering.toString(),
-                    sr.x - viewportRect.x + boardCam.components.camera.viewport.position.x,
-                    sr.y - viewportRect.y + boardCam.components.camera.viewport.position.y,
-                )
-            }
             ctx.fillStyle = fillStyle;
             ctx.strokeStyle = strokeStyle;
             ctx.fill();

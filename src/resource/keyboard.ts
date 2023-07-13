@@ -10,6 +10,8 @@ const KEYS = [
     "s",
     "d",
     "w",
+    "z",
+    "x",
 ] as const;
 
 type Key = typeof KEYS[number];

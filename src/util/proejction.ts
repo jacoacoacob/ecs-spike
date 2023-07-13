@@ -1,13 +1,6 @@
 import { OrthographicProjection } from "../component/camera";
 
-type Vec3 = [number, number, number];
 type Vec4 = [number, number, number, number];
-
-interface Mat3 {
-    xAxis: Vec3;
-    yAxis: Vec3;
-    zAxis: Vec3;
-}
 
 interface Mat4 {
     xAxis: Vec4;
@@ -15,33 +8,6 @@ interface Mat4 {
     zAxis: Vec4;
     wAxis: Vec4;
 }
-
-const mat = buildProjectionMatrix({
-    near: 0,
-    far: 1000,
-    viewportOrigin: {
-        x: 0.5,
-        y: 0.5,
-    },
-    scale: 1,
-    area: {
-        top: 0,
-        right: 1000,
-        bottom: 700,
-        left: 0,
-    },
-});
-
-// const x = 30;
-// const y = 60;
-// const z = 1;
-
-// const spriteVec: Vec4 = [
-//     x,
-//     y,
-//     z,
-//     0
-// ];
 
 function matMultiply(pm: Mat4, spriteVec: Vec4): Vec4 {
     const matrixRows = [
@@ -103,6 +69,40 @@ function buildProjectionMatrix(p: OrthographicProjection): Mat4 {
             1
         ]
     };
+}
+
+function createMat4(row1?: number, row2?: number) {
+    const isFloat32Array = typeof Float32Array !== "undefined";
+    const value = isFloat32Array ? new Float32Array(16) : new Array<number>(16);
+    if (!isFloat32Array) {
+        value[1] = 0;
+        value[2] = 0;
+        value[3] = 0;
+        value[4] = 0;
+        value[6] = 0;
+        value[8] = 0;
+        value[9] = 0;
+        value[11] = 0;
+        value[12] = 0;
+        value[13] = 0;
+        value[14] = 0;
+    }
+    value[0] = row1 ?? 1;
+    value[5] = row2 ?? 1;
+    value[10] = 1;
+    value[15] = 1;
+    return value;
+}
+
+function mat4Multiply() {
+
+}
+
+
+function buildScaleMatrix(deltaW: number, deltaH: number) {
+    const mat4 = createMat4(deltaW, deltaH);
+
+    
 }
 
 export { buildProjectionMatrix, matMultiply };
