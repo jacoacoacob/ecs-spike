@@ -21,15 +21,17 @@ interface KeyPressInfo {
     timestamp: number;
 }
 
+type Timestamp = number;
+
 function isKey(data: string): data is Key {
     return KEYS.includes(data as Key);
 }
 
-function whichDirection(dirNeg: KeyPressInfo, dirPos: KeyPressInfo, value: number) {
-    if (dirPos.timestamp > dirNeg.timestamp) {
+function whichDirection(dirNeg: Timestamp, dirPos: Timestamp, value: number) {
+    if (dirPos > dirNeg) {
         return value;
     }
-    if (dirPos.timestamp < dirNeg.timestamp) {
+    if (dirPos < dirNeg) {
         return -value;
     }
     return 0;
@@ -40,14 +42,15 @@ function keyboard() {
         name: "keyboard",
         setup() {
             const _justPressed = Object.fromEntries(KEYS.map((key) => [key, false])) as Record<Key, boolean>;
-            const _pressed = Object.fromEntries(KEYS.map((key) => [key, { timestamp: 0 }])) as Record<Key, KeyPressInfo> 
+            // const _pressed = Object.fromEntries(KEYS.map((key) => [key, { timestamp: 0 }])) as Record<Key, KeyPressInfo> 
+            const _pressed = Object.fromEntries(KEYS.map((key) => [key, 0])) as Record<Key, Timestamp> 
             const _justReleased = Object.fromEntries(KEYS.map((key) => [key, false])) as Record<Key, boolean>;
 
             const _qJustPressed: Key[] = [];
             const _qJustReleased: Key[] = [];
 
             function press(key: Key) {
-                if (pressed(key).timestamp === 0) {
+                if (pressed(key) === 0) {
                     _qJustPressed.push(key);
                 }
             }
@@ -56,7 +59,7 @@ function keyboard() {
                 _qJustReleased.push(key);
             }
 
-            function pressed(key: Key): KeyPressInfo {
+            function pressed(key: Key): Timestamp {
                 return _pressed[key];
             }
 
@@ -73,7 +76,7 @@ function keyboard() {
                     const key = KEYS[i];
                     if (_justPressed[key]) {
                         _justPressed[key] = false;
-                        _pressed[key].timestamp = Date.now();
+                        _pressed[key] = Date.now();
                     }
                     _justReleased[key] = false;
                 }
@@ -85,7 +88,7 @@ function keyboard() {
 
                 while (_qJustReleased.length) {
                     const key = _qJustReleased.shift() as Key;
-                    _pressed[key].timestamp = 0;
+                    _pressed[key] = 0;
                     _justReleased[key] = true;
                 }
             }

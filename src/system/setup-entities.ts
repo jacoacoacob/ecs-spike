@@ -93,7 +93,6 @@ function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
     const square = queryFirst<BoardSquare>((entity) =>
         entity.kind === "boardSquare" &&
         entity.components.ordering === 29
-        // entity.components.ordering === 86
     );
 
     if (square) {

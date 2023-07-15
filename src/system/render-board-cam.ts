@@ -3,9 +3,9 @@ import type { SystemParams } from "../lib/system";
 import type { AppResource } from "../resource";
 import type { AppEntity, BoardSquare, Camera, Sprite } from "../entity";
 import { boundingRect } from "../util/rect";
-import { buildProjectionMatrix, buildScaleMatrix } from "../util/proejction";
-import { multiplyPoint, pipelineMat4 } from "../util/matrix";
-import { projectRect } from "../util/clip-to-screen";
+import { buildProjectionMatrix, buildScaleMatrix } from "../lib/projection";
+import { pipelineMat4 } from "../lib/matrix";
+import { projectRect } from "../lib/clip-to-screen";
 
 
 function renderBoardCam({ getResource, query, getEntityById }: SystemParams<App<AppResource, AppEntity>>) {
@@ -46,7 +46,7 @@ function renderBoardCam({ getResource, query, getEntityById }: SystemParams<App<
             y,
             w,
             h
-        })
+        });
 
         const isVisible = projectedRect.w > 0 && projectedRect.h > 0;
 

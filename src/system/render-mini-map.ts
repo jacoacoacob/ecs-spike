@@ -1,9 +1,9 @@
 import { boundingRect } from "../util/rect";
 import type { Camera, World, Sprite, BoardSquare } from "../entity";
 import type { AppSystemParams } from "./types";
-import { invertMat4, multiplyPoint, pipelineMat4 } from "../util/matrix";
-import { projectRect } from "../util/clip-to-screen";
-import { buildProjectionMatrix, buildScaleMatrix, buildTranslationMatrix } from "../util/proejction";
+import { invertMat4, pipelineMat4 } from "../lib/matrix";
+import { projectRect } from "../lib/clip-to-screen";
+import { buildProjectionMatrix, buildScaleMatrix, buildTranslationMatrix } from "../lib/projection";
 
 function renderMiniMap({ getEntityById, getResource, query }: AppSystemParams) {
     const { ctx } = getResource("canvas");

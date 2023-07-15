@@ -1,4 +1,5 @@
 import type { Component } from "../lib/component";
+import { Mat4, createMat4 } from "../lib/matrix";
 import { BoundingRect } from "../util/rect";
 import { Size } from "./size";
 
@@ -27,6 +28,9 @@ interface OrthographicProjection {
 type Camera = Component<"camera", {
     viewport: Viewport;
     projection: OrthographicProjection;
+    computed: {
+        projectionMatrix: Mat4;
+    };
     order: number;
     isActive: boolean;
     visibleEntities: string[];
@@ -54,6 +58,9 @@ function camera(value?: CameraOptions): Camera {
                     x: value?.viewport?.position?.x ?? 0,
                     y: value?.viewport?.position?.y ?? 0,
                 },
+            },
+            computed: {
+                projectionMatrix: createMat4(),
             },
             projection: {
                 near: 0,

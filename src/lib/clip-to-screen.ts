@@ -1,6 +1,6 @@
 import { multiplyPoint, type Mat4 } from "./matrix";
 import type { Viewport } from "../component/camera";
-import type { Rect } from "./rect";
+import type { Rect } from "../util/rect";
 
 function projectRect(viewport: Viewport, projectionMatrix: Mat4, rect: Rect): Rect {
     const [clipLeft, clipTop] = multiplyPoint(projectionMatrix, [

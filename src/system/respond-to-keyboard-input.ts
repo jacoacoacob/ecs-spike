@@ -36,10 +36,10 @@ function accelerateSprite(sprite: Sprite, keyboard: Keyboard["data"]) {
     const arrowDown = keyboard.pressed("ArrowDown");
     const arrowUp = keyboard.pressed("ArrowUp");
 
-    if (arrowDown.timestamp > arrowUp.timestamp) {
+    if (arrowDown > arrowUp) {
         accel(sprite, "dy", ACCEL, MAX_VELOCITY);
     }
-    else if (arrowDown.timestamp < arrowUp.timestamp) {
+    else if (arrowDown < arrowUp) {
         accel(sprite, "dy", -ACCEL, -MAX_VELOCITY);
     }
     else if (sprite.components.velocity.dy > 0) {
@@ -52,10 +52,10 @@ function accelerateSprite(sprite: Sprite, keyboard: Keyboard["data"]) {
     const arrowLeft = keyboard.pressed("ArrowLeft");
     const arrowRight = keyboard.pressed("ArrowRight");
 
-    if (arrowLeft.timestamp > arrowRight.timestamp) {
+    if (arrowLeft > arrowRight) {
         accel(sprite, "dx", -ACCEL, -MAX_VELOCITY);
     }
-    else if (arrowLeft.timestamp < arrowRight.timestamp) {
+    else if (arrowLeft < arrowRight) {
         accel(sprite, "dx", ACCEL, MAX_VELOCITY);
     }
     else if (sprite.components.velocity.dx > 0) {
@@ -105,23 +105,19 @@ function moveCamera(world: World, camera: Camera, keyboard: Keyboard["data"]) {
 
 function respondToKeyboardInput({ getResource, getEntityById }: AppSystemParams) {
     const keyboard = getResource("keyboard");
-    const transformations = getResource("transformations");
 
     const p1 = getEntityById("p1") as Sprite;
     const world = getEntityById("world") as World;
     const boardCam = getEntityById("boardCam") as Camera;
-    const miniMap = getEntityById("miniMap") as Camera;
     
     accelerateSprite(p1, keyboard);
     moveCamera(world, boardCam, keyboard);
 
-    if (keyboard.justPressed("z")) {
-        boardCam.components.camera.projection.scale += 0.1;
-        miniMap.components.camera.projection.scale -= 0.1;
+    if (keyboard.pressed("z")) {
+        boardCam.components.camera.projection.scale += 0.01;
     }
-    if (keyboard.justPressed("x")) {
-        boardCam.components.camera.projection.scale -= 0.1;
-        miniMap.components.camera.projection.scale += 0.1
+    if (keyboard.pressed("x")) {
+        boardCam.components.camera.projection.scale -= 0.01;
     }
 }
 

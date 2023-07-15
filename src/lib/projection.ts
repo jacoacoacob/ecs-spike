@@ -63,4 +63,3 @@ function buildRotationMatrix(deltaRadians: number) {
 }
 
 export { buildProjectionMatrix, buildScaleMatrix, buildRotationMatrix, buildTranslationMatrix };
-
