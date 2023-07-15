@@ -30,6 +30,15 @@ function buildScaleMatrix(scale: number) {
     ])
 }
 
+function buildTranslationMatrix(x: number, y: number) {
+    return createMat4([
+        1, 0, 0, x,
+        0, 1, 0, y,
+        0, 0, 1, 1,
+        0, 0, 0, 1,
+    ]);
+}
+
 function buildRotationMatrix(deltaRadians: number) {
     let a = Math.PI * deltaRadians;
 
@@ -53,5 +62,5 @@ function buildRotationMatrix(deltaRadians: number) {
     ])
 }
 
-export { buildProjectionMatrix, buildScaleMatrix,buildRotationMatrix };
+export { buildProjectionMatrix, buildScaleMatrix, buildRotationMatrix, buildTranslationMatrix };
 

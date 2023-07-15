@@ -117,11 +117,11 @@ function respondToKeyboardInput({ getResource, getEntityById }: AppSystemParams)
 
     if (keyboard.justPressed("z")) {
         boardCam.components.camera.projection.scale += 0.1;
-        miniMap.components.camera.projection.scale += 0.1;
+        miniMap.components.camera.projection.scale -= 0.1;
     }
     if (keyboard.justPressed("x")) {
         boardCam.components.camera.projection.scale -= 0.1;
-        miniMap.components.camera.projection.scale -= 0.1
+        miniMap.components.camera.projection.scale += 0.1
     }
 }
 

@@ -5,6 +5,7 @@ import type { AppEntity, BoardSquare, Camera, Sprite } from "../entity";
 import { boundingRect } from "../util/rect";
 import { buildProjectionMatrix, buildScaleMatrix } from "../util/proejction";
 import { multiplyPoint, pipelineMat4 } from "../util/matrix";
+import { projectRect } from "../util/clip-to-screen";
 
 
 function renderBoardCam({ getResource, query, getEntityById }: SystemParams<App<AppResource, AppEntity>>) {
@@ -40,39 +41,12 @@ function renderBoardCam({ getResource, query, getEntityById }: SystemParams<App<
         const { x, y } = sprite.components.transform.translationGlobal;
         const { w, h } = sprite.components.size;
 
-        const [viewLeft, viewTop] = multiplyPoint(projectionMatrix, [
+        const projectedRect = projectRect(viewport, projectionMatrix, {
             x,
             y,
-            1,
-            1,
-        ]);
-
-        const [viewRight, viewBottom] = multiplyPoint(projectionMatrix, [
-            x + w,
-            y + h,
-            1,
-            1, 
-        ]);
-        
-        const projX = Math.round((viewLeft - -1) * (viewport.size.w / 2));
-        const projY = Math.round((1 - viewTop) * (viewport.size.h / 2));
-        const projW = Math.round((viewRight - viewLeft) * (viewport.size.w / 2));
-        const projH = Math.round((viewTop - viewBottom) * (viewport.size.h / 2));
-
-        const projectedRect = {
-            x: Math.max(0, projX),
-            y: Math.max(0, projY),
-            w: projX < 0
-                ? projW + projX
-                : projX + projW > viewport.size.w
-                    ? projW - (projX + projW - viewport.size.w)
-                    : projW,
-            h: projY < 0
-                ? projH + projY
-                : projY + projH > viewport.size.h
-                    ? projH - (projY + projH - viewport.size.h)
-                    : projH,
-        };
+            w,
+            h
+        })
 
         const isVisible = projectedRect.w > 0 && projectedRect.h > 0;
 

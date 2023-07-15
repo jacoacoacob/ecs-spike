@@ -12,6 +12,44 @@ function createMat4(value?: number[]) {
     return mat4;
 }
 
+function invertMat4(mat4: Mat4) {
+	const result: number[] = [];
+
+	const n11 = mat4[0], n12 = mat4[4], n13 = mat4[ 8], n14 = mat4[12];
+	const n21 = mat4[1], n22 = mat4[5], n23 = mat4[ 9], n24 = mat4[13];
+	const n31 = mat4[2], n32 = mat4[6], n33 = mat4[10], n34 = mat4[14];
+	const n41 = mat4[3], n42 = mat4[7], n43 = mat4[11], n44 = mat4[15];
+
+	result[ 0] = n23 * n34 * n42 - n24 * n33 * n42 + n24 * n32 * n43 - n22 * n34 * n43 - n23 * n32 * n44 + n22 * n33 * n44;
+	result[ 4] = n14 * n33 * n42 - n13 * n34 * n42 - n14 * n32 * n43 + n12 * n34 * n43 + n13 * n32 * n44 - n12 * n33 * n44;
+	result[ 8] = n13 * n24 * n42 - n14 * n23 * n42 + n14 * n22 * n43 - n12 * n24 * n43 - n13 * n22 * n44 + n12 * n23 * n44;
+	result[12] = n14 * n23 * n32 - n13 * n24 * n32 - n14 * n22 * n33 + n12 * n24 * n33 + n13 * n22 * n34 - n12 * n23 * n34;
+	result[ 1] = n24 * n33 * n41 - n23 * n34 * n41 - n24 * n31 * n43 + n21 * n34 * n43 + n23 * n31 * n44 - n21 * n33 * n44;
+	result[ 5] = n13 * n34 * n41 - n14 * n33 * n41 + n14 * n31 * n43 - n11 * n34 * n43 - n13 * n31 * n44 + n11 * n33 * n44;
+	result[ 9] = n14 * n23 * n41 - n13 * n24 * n41 - n14 * n21 * n43 + n11 * n24 * n43 + n13 * n21 * n44 - n11 * n23 * n44;
+	result[13] = n13 * n24 * n31 - n14 * n23 * n31 + n14 * n21 * n33 - n11 * n24 * n33 - n13 * n21 * n34 + n11 * n23 * n34;
+	result[ 2] = n22 * n34 * n41 - n24 * n32 * n41 + n24 * n31 * n42 - n21 * n34 * n42 - n22 * n31 * n44 + n21 * n32 * n44;
+	result[ 6] = n14 * n32 * n41 - n12 * n34 * n41 - n14 * n31 * n42 + n11 * n34 * n42 + n12 * n31 * n44 - n11 * n32 * n44;
+	result[10] = n12 * n24 * n41 - n14 * n22 * n41 + n14 * n21 * n42 - n11 * n24 * n42 - n12 * n21 * n44 + n11 * n22 * n44;
+	result[14] = n14 * n22 * n31 - n12 * n24 * n31 - n14 * n21 * n32 + n11 * n24 * n32 + n12 * n21 * n34 - n11 * n22 * n34;
+	result[ 3] = n23 * n32 * n41 - n22 * n33 * n41 - n23 * n31 * n42 + n21 * n33 * n42 + n22 * n31 * n43 - n21 * n32 * n43;
+	result[ 7] = n12 * n33 * n41 - n13 * n32 * n41 + n13 * n31 * n42 - n11 * n33 * n42 - n12 * n31 * n43 + n11 * n32 * n43;
+	result[11] = n13 * n22 * n41 - n12 * n23 * n41 - n13 * n21 * n42 + n11 * n23 * n42 + n12 * n21 * n43 - n11 * n22 * n43;
+	result[15] = n12 * n23 * n31 - n13 * n22 * n31 + n13 * n21 * n32 - n11 * n23 * n32 - n12 * n21 * n33 + n11 * n22 * n33;
+
+	const determinant = n11 * result[0] + n21 * result[4] + n31 * result[8] + n41 * result[12];
+
+	if (determinant === 0 ) {
+		throw new Error("Can't invert mat4, determinant is 0");
+	}
+	
+	for (let i = 0; i < result.length; i++) {
+		result[i] /= determinant;
+	}
+
+	return result;
+}
+
 type Vec4 = [number, number, number, number];
 
 type Mat4 = ReturnType<typeof createMat4>;
@@ -63,5 +101,5 @@ function pipelineMat4(matrices: Mat4[]) {
     return accum;
 }
 
-export { createMat4, multiplyMat4, multiplyPoint, pipelineMat4 };
+export { createMat4, multiplyMat4, multiplyPoint, pipelineMat4, invertMat4 };
 export type { Mat4, Vec4 }

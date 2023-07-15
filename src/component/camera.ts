@@ -75,4 +75,4 @@ function camera(value?: CameraOptions): Camera {
 }
 
 export { camera };
-export type { Camera, OrthographicProjection };
+export type { Camera, OrthographicProjection, Viewport };

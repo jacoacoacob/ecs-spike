@@ -65,7 +65,7 @@ function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
     
     miniMap.components.camera.projection.scale = 1;
 
-    createScaleInput(boardCam.components.camera.projection);
+    // createScaleInput(boardCam.components.camera.projection);
 
     const { rows, cols, tileSize } = world.components.tileMap;
 
