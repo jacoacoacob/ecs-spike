@@ -3,7 +3,6 @@ import { AppSystemParams } from "./types";
 
 
 function setupEntities({ spawn, queryFirst, useResource }: AppSystemParams) {
-    const transformations = useResource("transformations");
     const messages = useResource("messages");
 
     const world = spawn("world", "world");
@@ -55,15 +54,6 @@ function setupEntities({ spawn, queryFirst, useResource }: AppSystemParams) {
 
         square.components.size.w = tileSize;
         square.components.size.h = tileSize;
-
-        // transformations.push({
-        //     entityId: square.id,
-        //     translation: {
-        //         x: col * tileSize,
-        //         y: row * tileSize,
-        //         z: 0,
-        //     }
-        // });
 
         messages.enqueue("transform", {
             entityId: square.id,

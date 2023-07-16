@@ -4,7 +4,7 @@ import { EntityWith, hasComponent } from "../lib/entity";
 import { AppSystemParams } from "./types";
 
 function updateEntityPositions({ query, useResource }: AppSystemParams) {
-    const transformations = useResource("transformations");
+    const messages = useResource("messages");
 
     const moveable = query(
         (entity) => hasComponent<Transform | Velocity>(entity, ["transform", "velocity"])
@@ -15,7 +15,7 @@ function updateEntityPositions({ query, useResource }: AppSystemParams) {
             entity.components.velocity.dx !== 0 ||
             entity.components.velocity.dy !== 0
         ) {
-            transformations.push({
+            messages.enqueue("transform", {
                 entityId: entity.id,
                 translation: {
                     x: entity.components.transform.translation.x + entity.components.velocity.dx,

@@ -3,7 +3,6 @@ import type { AppResource } from "./src/resource";
 import { createSprite, type AppEntity, createBoardSquare, createWorld, createCamera } from "./src/entity";
 import { keyboard } from "./src/resource/keyboard";
 import { canvas } from "./src/resource/canvas";
-import { transformations } from "./src/resource/transformations";
 import { setupKeyboardListeners } from "./src/system/setup-keyboard-listeners";
 import { setupCanvasResize } from "./src/system/setup-canvas-resize";
 import { renderBoardCam } from "./src/system/render-board-cam";
@@ -13,13 +12,14 @@ import { setupEntities } from "./src/system/setup-entities";
 import { propagateTransforms } from "./src/system/propagate-transforms";
 import { renderMiniMap } from "./src/system/render-mini-map";
 import { messagesResource } from "./src/resource/messages";
+import { handleMessages } from "./src/system/handle-messages";
+
 
 
 const app = new App<AppResource, AppEntity>({
     resources: [
         keyboard,
         canvas,
-        transformations,
         messagesResource,
     ],
     entityFactories: {
@@ -41,8 +41,11 @@ app.addSystem(({ useResource }) => {
 
 app.addSystem(respondToKeyboardInput);
 app.addSystem(updateEntityPositions);
-app.addSystem(propagateTransforms);
+// app.addSystem(propagateTransforms);
+
+app.addSystem(handleMessages);
 app.addSystem(renderBoardCam);
 app.addSystem(renderMiniMap);
+
 
 app.run();
