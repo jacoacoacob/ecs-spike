@@ -76,7 +76,7 @@ function camera(value?: CameraOptions): Camera {
                     bottom: 0,
                     left: 0,
                 }
-            }
+            },
         },
     };
 }

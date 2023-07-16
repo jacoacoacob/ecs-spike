@@ -12,12 +12,15 @@ import { updateEntityPositions } from "./src/system/update-entity-positions";
 import { setupEntities } from "./src/system/setup-entities";
 import { propagateTransforms } from "./src/system/propagate-transforms";
 import { renderMiniMap } from "./src/system/render-mini-map";
+import { messagesResource } from "./src/resource/messages";
+
 
 const app = new App<AppResource, AppEntity>({
     resources: [
         keyboard,
         canvas,
         transformations,
+        messagesResource,
     ],
     entityFactories: {
         "boardSquare": createBoardSquare,
@@ -31,10 +34,11 @@ app.addStartupSystem(setupCanvasResize);
 app.addStartupSystem(setupKeyboardListeners);
 app.addStartupSystem(setupEntities);
 
-app.addSystem(({ getResource }) => {
-    const keyboard = getResource("keyboard");
+app.addSystem(({ useResource }) => {
+    const keyboard = useResource("keyboard");    
     keyboard.tick();
 });
+
 app.addSystem(respondToKeyboardInput);
 app.addSystem(updateEntityPositions);
 app.addSystem(propagateTransforms);

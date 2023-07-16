@@ -3,8 +3,8 @@ import { Velocity } from "../component/velocity";
 import { EntityWith, hasComponent } from "../lib/entity";
 import { AppSystemParams } from "./types";
 
-function updateEntityPositions({ query, getResource }: AppSystemParams) {
-    const transformations = getResource("transformations");
+function updateEntityPositions({ query, useResource }: AppSystemParams) {
+    const transformations = useResource("transformations");
 
     const moveable = query(
         (entity) => hasComponent<Transform | Velocity>(entity, ["transform", "velocity"])

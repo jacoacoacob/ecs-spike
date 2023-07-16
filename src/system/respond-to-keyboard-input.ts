@@ -103,8 +103,8 @@ function moveCamera(world: World, camera: Camera, keyboard: Keyboard["data"]) {
     }
 }
 
-function respondToKeyboardInput({ getResource, getEntityById }: AppSystemParams) {
-    const keyboard = getResource("keyboard");
+function respondToKeyboardInput({ useResource, getEntityById }: AppSystemParams) {
+    const keyboard = useResource("keyboard");
 
     const p1 = getEntityById("p1") as Sprite;
     const world = getEntityById("world") as World;

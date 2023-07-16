@@ -4,8 +4,8 @@ import { SystemParams } from "../lib/system";
 import type { AppResource } from "../resource";
 import type { AppEntity } from "../entity";
 
-function setupCanvasResize({ getResource }: SystemParams<App<AppResource, AppEntity>>) {
-    const { ctx } = getResource("canvas");
+function setupCanvasResize({ useResource }: SystemParams<App<AppResource, AppEntity>>) {
+    const { ctx } = useResource("canvas");
 
     window.addEventListener("resize", onResize);
 

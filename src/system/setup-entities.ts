@@ -1,31 +1,10 @@
-
-import { OrthographicProjection } from "../component/camera";
 import { type BoardSquare, setParentChild } from "../entity";
 import { AppSystemParams } from "./types";
 
-function createScaleInput(projection: OrthographicProjection) {
-    const scaleInput = document.createElement("input");
 
-    scaleInput.type = "number";
-    scaleInput.style.position = "absolute";
-    scaleInput.style.top = "8px";
-    scaleInput.style.right = "8px";
-    scaleInput.style.width = "50px"
-
-    scaleInput.setAttribute("step", "0.1")
-    
-    scaleInput.value = projection.scale.toString();
-
-    scaleInput.addEventListener("input", (ev) => {
-        projection.scale = Number.parseFloat((ev.target as HTMLInputElement).value);
-    });
-
-    document.body.append(scaleInput);
-}
-
-
-function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
-    const transformations = getResource("transformations");
+function setupEntities({ spawn, queryFirst, useResource }: AppSystemParams) {
+    const transformations = useResource("transformations");
+    const messages = useResource("messages");
 
     const world = spawn("world", "world");
 
@@ -52,7 +31,6 @@ function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
 
     boardCam.components.camera.projection.scale = 1;
     
-    
     miniMap.components.camera.viewport.position = {
         x: 940,
         y: 20
@@ -64,8 +42,6 @@ function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
     }
     
     miniMap.components.camera.projection.scale = 1;
-
-    // createScaleInput(boardCam.components.camera.projection);
 
     const { rows, cols, tileSize } = world.components.tileMap;
 
@@ -80,13 +56,22 @@ function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
         square.components.size.w = tileSize;
         square.components.size.h = tileSize;
 
-        transformations.push({
+        // transformations.push({
+        //     entityId: square.id,
+        //     translation: {
+        //         x: col * tileSize,
+        //         y: row * tileSize,
+        //         z: 0,
+        //     }
+        // });
+
+        messages.enqueue("transform", {
             entityId: square.id,
             translation: {
                 x: col * tileSize,
                 y: row * tileSize,
                 z: 0,
-            }
+            },
         });
     }
 
@@ -111,8 +96,7 @@ function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
         c1_1.components.size.h = 40;
 
         setParentChild(c1, c1_1);
-        // setParentChild(player, c1)
-        // setParentChild(player, c2);
+        setParentChild(player, c2);
 
         c1.components.size.w = 80;
         c1.components.size.h = 80;
@@ -123,7 +107,7 @@ function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
         player.components.size.w = 200;
         player.components.size.h = 200;
 
-        transformations.push({
+        messages.enqueue("transform", {
             entityId: c1.id,
             translation: {
                 x: 50,
@@ -132,7 +116,7 @@ function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
             },
         });
 
-        transformations.push({
+        messages.enqueue("transform", {
             entityId: c2.id,
             translation: {
                 x: player.components.size.w + 50,
@@ -140,7 +124,6 @@ function setupEntities({ spawn, queryFirst, getResource }: AppSystemParams) {
                 z: 0,
             },
         });
-
     }
 }
 

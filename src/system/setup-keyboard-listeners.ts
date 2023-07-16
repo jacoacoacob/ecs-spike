@@ -4,8 +4,8 @@ import type { SystemParams } from "../lib/system";
 import type { AppResource } from "../resource";
 import type { AppEntity } from "../entity";
 
-function setupKeyboardListeners(params: SystemParams<App<AppResource, AppEntity>>) {
-    const keyboard = params.getResource("keyboard");
+function setupKeyboardListeners({ useResource }: SystemParams<App<AppResource, AppEntity>>) {
+    const keyboard = useResource("keyboard");
 
     window.addEventListener("keydown", (ev) => {
         let key = ev.key;

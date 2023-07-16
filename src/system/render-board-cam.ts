@@ -8,8 +8,8 @@ import { pipelineMat4 } from "../lib/matrix";
 import { projectRect } from "../lib/clip-to-screen";
 
 
-function renderBoardCam({ getResource, query, getEntityById }: SystemParams<App<AppResource, AppEntity>>) {
-    const { ctx } = getResource("canvas");
+function renderBoardCam({ useResource, query, getEntityById }: SystemParams<App<AppResource, AppEntity>>) {
+    const { ctx } = useResource("canvas");
 
     const boardCam = getEntityById("boardCam") as Camera;
 

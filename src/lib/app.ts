@@ -2,7 +2,7 @@ import { animationLoop } from "./animation-loop";
 import { Component } from "./component";
 import { Entity } from "./entity";
 import type { Resource } from "./resource";
-import type { System } from "./system";
+import type { System, SystemParams } from "./system";
 
 type Plugin<App> = (app: App) => void;
 
@@ -40,10 +40,10 @@ class App<
     private _entities: Entities<AppEntity> = {} as Entities<AppEntity>;
     private _entityFactories = {} as EntityFactories<AppEntity>;
 
-    private get _systemParams() {
+    private get _systemParams(): SystemParams<App<any, any>> {
         return {
             getEntityById: this.getEntityById.bind(this),
-            getResource: this.getResource.bind(this),
+            useResource: this.useResource.bind(this),
             query: this.query.bind(this),
             queryFirst: this.queryFirst.bind(this),
             spawn: this.spawn.bind(this),
@@ -115,7 +115,7 @@ class App<
         this._systems.push(() => system(this._systemParams));
     }
     
-    getResource<Name extends keyof Resources<AppResource>>(name: Name) {
+    useResource<Name extends keyof Resources<AppResource>>(name: Name) {
         return this._resources[name];
     }
 

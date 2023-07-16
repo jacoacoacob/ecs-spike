@@ -2,7 +2,7 @@ import { App } from "./app";
 
 interface SystemParams<A extends App<any, any>> {
     getEntityById: A["getEntityById"];
-    getResource: A["getResource"];
+    useResource: A["useResource"];
     query: A["query"];
     queryFirst: A["queryFirst"];
     spawn: A["spawn"];

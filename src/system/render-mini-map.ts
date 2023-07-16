@@ -5,8 +5,8 @@ import { invertMat4, pipelineMat4 } from "../lib/matrix";
 import { projectRect } from "../lib/clip-to-screen";
 import { buildProjectionMatrix, buildScaleMatrix, buildTranslationMatrix } from "../lib/projection";
 
-function renderMiniMap({ getEntityById, getResource, query }: AppSystemParams) {
-    const { ctx } = getResource("canvas");
+function renderMiniMap({ getEntityById, useResource, query }: AppSystemParams) {
+    const { ctx } = useResource("canvas");
 
     const world = getEntityById("world") as World;
     const boardCam = getEntityById("boardCam") as Camera;
@@ -41,12 +41,16 @@ function renderMiniMap({ getEntityById, getResource, query }: AppSystemParams) {
         const { x, y } = sprite.components.transform.translationGlobal;
         const { w, h } = sprite.components.size;
 
-        const projectedRect = projectRect(viewport, projectionMatrix, {
-            x,
-            y,
-            w,
-            h
-        })
+        const projectedRect = projectRect(
+            viewport,
+            projectionMatrix,
+            {
+                x,
+                y,
+                w,
+                h
+            }
+        )
 
         const isVisible = projectedRect.w > 0 && projectedRect.h > 0;
 

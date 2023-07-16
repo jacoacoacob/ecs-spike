@@ -2,14 +2,19 @@ import { type EntityWith, hasComponent } from "../lib/entity";
 import type { Children } from "../component/children";
 import type { Transform } from "../component/transform";
 import type { Transformation } from "../resource/transformations";
-import type { AppEntity } from "../entity";
+import type { AppEntity, Camera } from "../entity";
 import type { AppSystemParams } from "./types";
 
-function propagateTransforms({ getResource, getEntityById }: AppSystemParams) {
-    const transformations = getResource("transformations");
+function propagateTransforms({ useResource, getEntityById }: AppSystemParams) {
+    const transformations = useResource("transformations");
+    const events = useResource("events");
 
-    while (transformations.length) {
-        const { entityId, translation } = transformations.shift() as Transformation;
+    const _transformations = events.select("transform");
+
+
+
+    while (_transformations.length) {
+        const { entityId, translation } = _transformations.shift() as Transformation;
 
         const entity = getEntityById(entityId) as EntityWith<Transform>;
 
