@@ -22,33 +22,31 @@ function setupEntities({ spawn, queryFirst, useResource }: AppSystemParams) {
         x: 20,
         y: 20,
     };
-
-    boardCam.components.camera.viewport.size = {
-        // w: 900,
-        // h: 600,
-        w: window.innerWidth - 40,
-        h: window.innerHeight - 40,
-    };
-
-    boardCam.components.camera.projection.scale = 1;
-    
- 
+        
     miniMap.components.camera.viewport.size = {
-        // w: 300,
-        // h: 200
         w: 270,
         h: 180,
     }
 
-    miniMap.components.camera.viewport.position = {
-        // x: 940,
-        // y: 20,
-        x: window.innerWidth - 40 -  miniMap.components.camera.viewport.size.w,
-        y: window.innerHeight - 40 -  miniMap.components.camera.viewport.size.h,
-    };
-    
+    boardCam.components.camera.projection.scale = 1;
     
     miniMap.components.camera.projection.scale = 1;
+
+    function onWindowResize() {
+        boardCam.components.camera.viewport.size = {
+            w: window.innerWidth - 40,
+            h: window.innerHeight - 40,
+        };
+
+        miniMap.components.camera.viewport.position = {
+            x: window.innerWidth - 40 -  miniMap.components.camera.viewport.size.w,
+            y: window.innerHeight - 40 -  miniMap.components.camera.viewport.size.h,
+        };
+    }
+
+    onWindowResize();
+
+    window.addEventListener("resize", onWindowResize);
 
     const { rows, cols, tileSize } = world.components.tileMap;
 
