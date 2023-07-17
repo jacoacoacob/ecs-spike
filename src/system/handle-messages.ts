@@ -56,11 +56,13 @@ function handleMessages(params: AppSystemParams) {
         },
     };
 
-    while (messages.length()) {
-        const message = messages.dequeue() as Message;
+    const transforms = messages.select("transform");
 
-        handlers[message.type](params, message.payload as any);
-    }
+    // while (messages.length()) {
+    //     const message = messages.dequeue() as Message;
+
+    //     handlers[message.type](params, message.payload as any);
+    // }
 }
 
 export { handleMessages };

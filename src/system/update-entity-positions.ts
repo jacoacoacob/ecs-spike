@@ -15,7 +15,7 @@ function updateEntityPositions({ query, useResource }: AppSystemParams) {
             entity.components.velocity.dx !== 0 ||
             entity.components.velocity.dy !== 0
         ) {
-            messages.enqueue("transform", {
+            messages.send("transform", {
                 entityId: entity.id,
                 translation: {
                     x: entity.components.transform.translation.x + entity.components.velocity.dx,

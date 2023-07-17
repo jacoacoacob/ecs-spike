@@ -111,7 +111,7 @@ function renderMiniMap({ getEntityById, useResource, query }: AppSystemParams) {
     ctx.beginPath();
     ctx.save();
     ctx.strokeStyle = "orange";
-    ctx.lineWidth = 4;
+    ctx.lineWidth = 2;
     ctx.strokeRect(
         miniMap.components.camera.viewport.position.x,
         miniMap.components.camera.viewport.position.y,
@@ -121,14 +121,14 @@ function renderMiniMap({ getEntityById, useResource, query }: AppSystemParams) {
     ctx.restore();
     ctx.closePath();
 
-    ctx.strokeStyle = "red";
+    ctx.fillStyle = "white";
     ctx.font = "20px Arial";
-    ctx.strokeText(
-        (Math.round(
+    ctx.fillText(
+        "Scale: " + (Math.round(
             boardCam.components.camera.projection.scale * 100
         ) / 100).toString(),
-        940,
-        250
+        40,
+        window.innerHeight - 40
     );
 
 }

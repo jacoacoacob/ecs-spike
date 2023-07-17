@@ -24,21 +24,29 @@ function setupEntities({ spawn, queryFirst, useResource }: AppSystemParams) {
     };
 
     boardCam.components.camera.viewport.size = {
-        w: 900,
-        h: 600,
+        // w: 900,
+        // h: 600,
+        w: window.innerWidth - 40,
+        h: window.innerHeight - 40,
     };
 
     boardCam.components.camera.projection.scale = 1;
     
+ 
+    miniMap.components.camera.viewport.size = {
+        // w: 300,
+        // h: 200
+        w: 270,
+        h: 180,
+    }
+
     miniMap.components.camera.viewport.position = {
-        x: 940,
-        y: 20
+        // x: 940,
+        // y: 20,
+        x: window.innerWidth - 40 -  miniMap.components.camera.viewport.size.w,
+        y: window.innerHeight - 40 -  miniMap.components.camera.viewport.size.h,
     };
     
-    miniMap.components.camera.viewport.size = {
-        w: 300,
-        h: 200
-    }
     
     miniMap.components.camera.projection.scale = 1;
 
@@ -55,7 +63,7 @@ function setupEntities({ spawn, queryFirst, useResource }: AppSystemParams) {
         square.components.size.w = tileSize;
         square.components.size.h = tileSize;
 
-        messages.enqueue("transform", {
+        messages.send("transform", {
             entityId: square.id,
             translation: {
                 x: col * tileSize,
@@ -97,7 +105,7 @@ function setupEntities({ spawn, queryFirst, useResource }: AppSystemParams) {
         player.components.size.w = 200;
         player.components.size.h = 200;
 
-        messages.enqueue("transform", {
+        messages.send("transform", {
             entityId: c1.id,
             translation: {
                 x: 50,
@@ -106,7 +114,7 @@ function setupEntities({ spawn, queryFirst, useResource }: AppSystemParams) {
             },
         });
 
-        messages.enqueue("transform", {
+        messages.send("transform", {
             entityId: c2.id,
             translation: {
                 x: player.components.size.w + 50,

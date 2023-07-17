@@ -70,7 +70,7 @@ function renderBoardCam({ useResource, query, getEntityById }: SystemParams<App<
 
     ctx.beginPath();
     ctx.save();
-    ctx.lineWidth = 4;
+    ctx.lineWidth = 2;
     ctx.strokeStyle = "orange";
     ctx.strokeRect(
         viewport.position.x,

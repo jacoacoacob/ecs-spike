@@ -18,24 +18,34 @@ type Transform = IMessage<"transform", {
 type Message = MoveCamera | Transform;
 
 type Messages = {
-    [T in Message as T["type"]]: T["payload"];
+    [T in Message as T["type"]]: T["payload"][];
+}
+
+function initMessages(): Messages {
+    return {
+        move_camera: [],
+        transform: [],
+    };
 }
 
 function messagesResource() {
     return createResource({
         name: "messages",
         setup() {
-            const messages: Message[] = [];
+            let _messages = initMessages();
 
             return {
-                enqueue<T extends keyof Messages>(type: T, payload: Messages[T]) {
-                    messages.push({ type, payload } as Message);
+                send<T extends keyof Messages>(
+                    type: T,
+                    payload: Messages[T][number]
+                ) {
+                    _messages[type].push(payload as any);
                 },
-                dequeue() {
-                    return messages.shift();
+                select<T extends keyof Messages>(type: T) {
+                    return _messages[type];
                 },
-                length() {
-                    return messages.length;
+                update() {
+                    _messages = initMessages();
                 },
             };
         },
@@ -45,4 +55,4 @@ function messagesResource() {
 type MessagesResource = ReturnType<typeof messagesResource>;
 
 export { messagesResource };
-export type { MessagesResource, Message };
+export type { MessagesResource, Message, Transform };

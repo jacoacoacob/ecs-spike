@@ -71,7 +71,7 @@ function keyboard() {
                 return _justReleased[key];
             }
 
-            function tick() {
+            function update() {
                 for (let i = 0; i < KEYS.length; i++) {
                     const key = KEYS[i];
                     if (_justPressed[key]) {
@@ -94,7 +94,7 @@ function keyboard() {
             }
 
             return {
-                tick,
+                update,
                 press,
                 release,
                 pressed,

@@ -9,12 +9,10 @@ import { renderBoardCam } from "./src/system/render-board-cam";
 import { respondToKeyboardInput } from "./src/system/respond-to-keyboard-input";
 import { updateEntityPositions } from "./src/system/update-entity-positions";
 import { setupEntities } from "./src/system/setup-entities";
-import { propagateTransforms } from "./src/system/propagate-transforms";
 import { renderMiniMap } from "./src/system/render-mini-map";
 import { messagesResource } from "./src/resource/messages";
 import { handleMessages } from "./src/system/handle-messages";
-
-
+import { propagateTransforms } from "./src/system/propagate-transforms";
 
 const app = new App<AppResource, AppEntity>({
     resources: [
@@ -34,18 +32,23 @@ app.addStartupSystem(setupCanvasResize);
 app.addStartupSystem(setupKeyboardListeners);
 app.addStartupSystem(setupEntities);
 
+
 app.addSystem(({ useResource }) => {
     const keyboard = useResource("keyboard");    
-    keyboard.tick();
+    const messages = useResource("messages");
+    
+    keyboard.update();
+    // messages.update();
 });
 
 app.addSystem(respondToKeyboardInput);
 app.addSystem(updateEntityPositions);
-// app.addSystem(propagateTransforms);
-
-app.addSystem(handleMessages);
+// app.addSystem(handleMessages);
+app.addSystem(propagateTransforms)
 app.addSystem(renderBoardCam);
 app.addSystem(renderMiniMap);
+
+
 
 
 app.run();
