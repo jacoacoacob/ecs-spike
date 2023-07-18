@@ -1,4 +1,3 @@
-
 import type { AppSystemParams } from "./types";
 
 function setupCanvas({ useResource }: AppSystemParams) {
@@ -15,12 +14,8 @@ function setupCanvas({ useResource }: AppSystemParams) {
         ctx.canvas.height = window.innerHeight;
     }
 
-    ctx.canvas.addEventListener("mouseenter", (ev) => {
-
-    });
-
     ctx.canvas.addEventListener("mousedown", (ev) => {
-
+        mouse.press();
     });
 
     ctx.canvas.addEventListener("mousemove", (ev) => {
@@ -28,11 +23,7 @@ function setupCanvas({ useResource }: AppSystemParams) {
     });
 
     ctx.canvas.addEventListener("mouseup", (ev) => {
-
-    });
-
-    ctx.canvas.addEventListener("mouseleave", (ev) => {
-
+        mouse.release();
     });
 }
 

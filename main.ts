@@ -13,6 +13,7 @@ import { renderMiniMap } from "./src/system/render-mini-map";
 import { messagesResource } from "./src/resource/messages";
 import { propagateTransforms } from "./src/system/propagate-transforms";
 import { screenResource } from "./src/resource/screen";
+import { mouseResource } from "./src/resource/mouse";
 
 const app = new App<AppResource, AppEntity>({
     resources: [
@@ -20,6 +21,7 @@ const app = new App<AppResource, AppEntity>({
         canvas,
         messagesResource,
         screenResource,
+        mouseResource,
     ],
     entityFactories: {
         "boardSquare": createBoardSquare,
@@ -35,10 +37,10 @@ app.addStartupSystem(setupWindow);
 
 app.addSystem(({ useResource }) => {
     const keyboard = useResource("keyboard");    
-    const messages = useResource("messages");
-    
+    const mouse = useResource("mouse");
+
     keyboard.update();
-    // messages.update();
+    mouse.update();
 });
 
 app.addSystem(respondToKeyboardInput);

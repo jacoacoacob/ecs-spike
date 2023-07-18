@@ -40,17 +40,17 @@ function keyboard() {
             const _pressed = Object.fromEntries(KEYS.map((key) => [key, 0])) as Record<Key, Timestamp> 
             const _justReleased = Object.fromEntries(KEYS.map((key) => [key, false])) as Record<Key, boolean>;
 
-            const _qJustPressed: Key[] = [];
-            const _qJustReleased: Key[] = [];
+            const _bufferJustPressed: Key[] = [];
+            const _bufferJustReleased: Key[] = [];
 
             function press(key: Key) {
                 if (pressed(key) === 0) {
-                    _qJustPressed.push(key);
+                    _bufferJustPressed.push(key);
                 }
             }
 
             function release(key: Key) {
-                _qJustReleased.push(key);
+                _bufferJustReleased.push(key);
             }
 
             function pressed(key: Key): Timestamp {
@@ -75,13 +75,13 @@ function keyboard() {
                     _justReleased[key] = false;
                 }
 
-                while (_qJustPressed.length) {
-                    const key = _qJustPressed.shift() as Key;
+                while (_bufferJustPressed.length) {
+                    const key = _bufferJustPressed.shift() as Key;
                     _justPressed[key] = true;
                 }
 
-                while (_qJustReleased.length) {
-                    const key = _qJustReleased.shift() as Key;
+                while (_bufferJustReleased.length) {
+                    const key = _bufferJustReleased.shift() as Key;
                     _pressed[key] = 0;
                     _justReleased[key] = true;
                 }

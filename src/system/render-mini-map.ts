@@ -7,6 +7,7 @@ import { buildProjectionMatrix, buildScaleMatrix, buildTranslationMatrix } from 
 
 function renderMiniMap({ getEntityById, useResource, query }: AppSystemParams) {
     const { ctx } = useResource("canvas");
+    const mouse = useResource("mouse");
 
     const world = getEntityById("world") as World;
     const boardCam = getEntityById("boardCam") as Camera;
@@ -108,6 +109,10 @@ function renderMiniMap({ getEntityById, useResource, query }: AppSystemParams) {
     )
     ctx.closePath();
 
+    const { scale } = boardCam.components.camera.projection;
+
+    const roundedScale = Math.round(scale * 100) / 100;
+
     ctx.beginPath();
     ctx.save();
     ctx.strokeStyle = "orange";
@@ -120,13 +125,10 @@ function renderMiniMap({ getEntityById, useResource, query }: AppSystemParams) {
     );
     ctx.restore();
     ctx.closePath();
-
     ctx.fillStyle = "white";
-    ctx.font = "20px Arial";
+    ctx.font = "16px Arial";
     ctx.fillText(
-        "Scale: " + (Math.round(
-            boardCam.components.camera.projection.scale * 100
-        ) / 100).toString(),
+        `Scale: ${roundedScale}     MouseState: ${mouse.state}`,
         40,
         window.innerHeight - 40
     );
