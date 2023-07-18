@@ -16,23 +16,18 @@ const KEYS = [
 
 type Key = typeof KEYS[number];
 
-
-interface KeyPressInfo {
-    timestamp: number;
-}
-
 type Timestamp = number;
 
 function isKey(data: string): data is Key {
     return KEYS.includes(data as Key);
 }
 
-function whichDirection(dirNeg: Timestamp, dirPos: Timestamp, value: number) {
+function whichDirection(dirNeg: Timestamp, dirPos: Timestamp, velocity: number) {
     if (dirPos > dirNeg) {
-        return value;
+        return velocity;
     }
     if (dirPos < dirNeg) {
-        return -value;
+        return -velocity;
     }
     return 0;
 }
@@ -42,7 +37,6 @@ function keyboard() {
         name: "keyboard",
         setup() {
             const _justPressed = Object.fromEntries(KEYS.map((key) => [key, false])) as Record<Key, boolean>;
-            // const _pressed = Object.fromEntries(KEYS.map((key) => [key, { timestamp: 0 }])) as Record<Key, KeyPressInfo> 
             const _pressed = Object.fromEntries(KEYS.map((key) => [key, 0])) as Record<Key, Timestamp> 
             const _justReleased = Object.fromEntries(KEYS.map((key) => [key, false])) as Record<Key, boolean>;
 
@@ -109,3 +103,4 @@ type Keyboard = ReturnType<typeof keyboard>;
 
 export { keyboard, isKey, whichDirection };
 export type { Keyboard };
+

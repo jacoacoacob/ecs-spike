@@ -1,9 +1,9 @@
 import { type BoardSquare, setParentChild } from "../entity";
 import { AppSystemParams } from "./types";
 
-
 function setupEntities({ spawn, queryFirst, useResource }: AppSystemParams) {
     const messages = useResource("messages");
+    const screen = useResource("screen");
 
     const world = spawn("world", "world");
 
@@ -32,7 +32,11 @@ function setupEntities({ spawn, queryFirst, useResource }: AppSystemParams) {
     
     miniMap.components.camera.projection.scale = 1;
 
-    function onWindowResize() {
+    screen.onResize(onResize);
+
+    onResize();
+
+    function onResize() {
         boardCam.components.camera.viewport.size = {
             w: window.innerWidth - 40,
             h: window.innerHeight - 40,
@@ -43,10 +47,6 @@ function setupEntities({ spawn, queryFirst, useResource }: AppSystemParams) {
             y: window.innerHeight - 40 -  miniMap.components.camera.viewport.size.h,
         };
     }
-
-    onWindowResize();
-
-    window.addEventListener("resize", onWindowResize);
 
     const { rows, cols, tileSize } = world.components.tileMap;
 
@@ -92,6 +92,7 @@ function setupEntities({ spawn, queryFirst, useResource }: AppSystemParams) {
         c1_1.components.size.h = 40;
 
         setParentChild(c1, c1_1);
+        setParentChild(player, c1);
         setParentChild(player, c2);
 
         c1.components.size.w = 80;

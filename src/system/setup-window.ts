@@ -1,11 +1,11 @@
-import { App } from "../lib/app";
 import { isKey } from "../resource/keyboard";
-import type { SystemParams } from "../lib/system";
-import type { AppResource } from "../resource";
-import type { AppEntity } from "../entity";
+import type { AppSystemParams } from "./types";
 
-function setupKeyboardListeners({ useResource }: SystemParams<App<AppResource, AppEntity>>) {
+function setupWindow({ useResource }: AppSystemParams) {
     const keyboard = useResource("keyboard");
+    const screen = useResource("screen");
+
+    window.addEventListener("resize", screen.handleResize);
 
     window.addEventListener("keydown", (ev) => {
         let key = ev.key;
@@ -28,4 +28,4 @@ function setupKeyboardListeners({ useResource }: SystemParams<App<AppResource, A
     });
 }
 
-export { setupKeyboardListeners };
+export { setupWindow };

@@ -83,7 +83,7 @@ class App<
         delete this._entities[entityId];
     }
 
-    getEntityById(entityId: string): AppEntity | undefined {
+    getEntityById<E extends AppEntity>(entityId: string): E | undefined {
         return this._entities[entityId];
     }
 

@@ -3,22 +3,23 @@ import type { AppResource } from "./src/resource";
 import { createSprite, type AppEntity, createBoardSquare, createWorld, createCamera } from "./src/entity";
 import { keyboard } from "./src/resource/keyboard";
 import { canvas } from "./src/resource/canvas";
-import { setupKeyboardListeners } from "./src/system/setup-keyboard-listeners";
-import { setupCanvasResize } from "./src/system/setup-canvas-resize";
+import { setupCanvas } from "./src/system/setup-canvas";
+import { setupWindow } from "./src/system/setup-window";
 import { renderBoardCam } from "./src/system/render-board-cam";
 import { respondToKeyboardInput } from "./src/system/respond-to-keyboard-input";
 import { updateEntityPositions } from "./src/system/update-entity-positions";
 import { setupEntities } from "./src/system/setup-entities";
 import { renderMiniMap } from "./src/system/render-mini-map";
 import { messagesResource } from "./src/resource/messages";
-import { handleMessages } from "./src/system/handle-messages";
 import { propagateTransforms } from "./src/system/propagate-transforms";
+import { screenResource } from "./src/resource/screen";
 
 const app = new App<AppResource, AppEntity>({
     resources: [
         keyboard,
         canvas,
         messagesResource,
+        screenResource,
     ],
     entityFactories: {
         "boardSquare": createBoardSquare,
@@ -28,10 +29,9 @@ const app = new App<AppResource, AppEntity>({
     },
 });
 
-app.addStartupSystem(setupCanvasResize);
-app.addStartupSystem(setupKeyboardListeners);
 app.addStartupSystem(setupEntities);
-
+app.addStartupSystem(setupCanvas);
+app.addStartupSystem(setupWindow);
 
 app.addSystem(({ useResource }) => {
     const keyboard = useResource("keyboard");    
@@ -43,7 +43,6 @@ app.addSystem(({ useResource }) => {
 
 app.addSystem(respondToKeyboardInput);
 app.addSystem(updateEntityPositions);
-// app.addSystem(handleMessages);
 app.addSystem(propagateTransforms)
 app.addSystem(renderBoardCam);
 app.addSystem(renderMiniMap);
