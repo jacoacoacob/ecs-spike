@@ -1,9 +1,16 @@
+import type { Camera } from "../entity";
 import type { AppSystemParams } from "./types";
 
-function setupCanvas({ useResource }: AppSystemParams) {
+function setupCanvas({ getEntityById, useResource }: AppSystemParams) {
     const { ctx } = useResource("canvas");
     const screen = useResource("screen");
     const mouse = useResource("mouse");
+
+    const boardCam = getEntityById<Camera>("boardCam");
+
+    if (!boardCam) {
+        throw new Error("Couldn't get entity 'boardCam'");
+    }
     
     screen.onResize(onResize);
 
@@ -15,15 +22,20 @@ function setupCanvas({ useResource }: AppSystemParams) {
     }
 
     ctx.canvas.addEventListener("mousedown", (ev) => {
-        mouse.press();
+        mouse.press(ev);
     });
 
     ctx.canvas.addEventListener("mousemove", (ev) => {
-
+        mouse.move(ev);
     });
 
     ctx.canvas.addEventListener("mouseup", (ev) => {
-        mouse.release();
+        mouse.release(ev);
+    });
+
+    ctx.canvas.addEventListener("mouseleave", () => {
+        mouse.position.canvasX = -1;
+        mouse.position.canvasY = -1;
     });
 }
 

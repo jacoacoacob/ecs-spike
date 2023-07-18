@@ -14,6 +14,8 @@ import { messagesResource } from "./src/resource/messages";
 import { propagateTransforms } from "./src/system/propagate-transforms";
 import { screenResource } from "./src/resource/screen";
 import { mouseResource } from "./src/resource/mouse";
+import { updateResources } from "./src/system/update-resources";
+import { renderStats } from "./src/system/render-stats";
 
 const app = new App<AppResource, AppEntity>({
     resources: [
@@ -35,21 +37,12 @@ app.addStartupSystem(setupEntities);
 app.addStartupSystem(setupCanvas);
 app.addStartupSystem(setupWindow);
 
-app.addSystem(({ useResource }) => {
-    const keyboard = useResource("keyboard");    
-    const mouse = useResource("mouse");
-
-    keyboard.update();
-    mouse.update();
-});
-
 app.addSystem(respondToKeyboardInput);
 app.addSystem(updateEntityPositions);
 app.addSystem(propagateTransforms)
 app.addSystem(renderBoardCam);
 app.addSystem(renderMiniMap);
-
-
-
+app.addSystem(renderStats);
+app.addSystem(updateResources);
 
 app.run();

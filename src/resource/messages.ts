@@ -45,7 +45,10 @@ function messagesResource() {
                     return _messages[type];
                 },
                 update() {
-                    _messages = initMessages();
+                    const messageTypes = Object.keys(_messages);
+                    for (let i = 0; i < messageTypes.length; i++) {
+                        _messages[messageTypes[i]].splice(0);
+                    }
                 },
             };
         },

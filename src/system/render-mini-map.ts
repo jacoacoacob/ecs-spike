@@ -109,10 +109,6 @@ function renderMiniMap({ getEntityById, useResource, query }: AppSystemParams) {
     )
     ctx.closePath();
 
-    const { scale } = boardCam.components.camera.projection;
-
-    const roundedScale = Math.round(scale * 100) / 100;
-
     ctx.beginPath();
     ctx.save();
     ctx.strokeStyle = "orange";
@@ -125,14 +121,6 @@ function renderMiniMap({ getEntityById, useResource, query }: AppSystemParams) {
     );
     ctx.restore();
     ctx.closePath();
-    ctx.fillStyle = "white";
-    ctx.font = "16px Arial";
-    ctx.fillText(
-        `Scale: ${roundedScale}     MouseState: ${mouse.state}`,
-        40,
-        window.innerHeight - 40
-    );
-
 }
 
 export { renderMiniMap };

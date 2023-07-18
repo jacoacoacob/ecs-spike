@@ -10,8 +10,8 @@ function mouseResource() {
             let _bufferState: MouseState = "released";
 
             const position = {
-                x: 0,
-                y: 0,
+                canvasX: 0,
+                canvasY: 0,
             };
 
             return {
@@ -19,11 +19,19 @@ function mouseResource() {
                 get state() {
                     return _state;
                 },
-                press() {
-                    _bufferState = "just_pressed";
+                move(ev: MouseEvent) {
+                    position.canvasX = ev.offsetX;
+                    position.canvasY = ev.offsetY;
                 },
-                release() {
+                press(ev: MouseEvent) {
+                    _bufferState = "just_pressed";
+                    position.canvasX = ev.offsetX;
+                    position.canvasY = ev.offsetY;
+                },
+                release(ev: MouseEvent) {
                     _bufferState = "just_released";
+                    position.canvasX = ev.offsetX;
+                    position.canvasY = ev.offsetY;
                 },
                 update() {
                     if (_bufferState === "just_pressed") {

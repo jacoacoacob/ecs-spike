@@ -1,3 +1,4 @@
+type Vec2 = [number, number];
 type Vec4 = [number, number, number, number];
 
 type Mat4 = [
@@ -109,4 +110,4 @@ function pipelineMat4(matrices: Mat4[]) {
 }
 
 export { createMat4, multiplyMat4, multiplyPoint, pipelineMat4, invertMat4 };
-export type { Mat4, Vec4 }
+export type { Mat4, Vec4, Vec2 }
