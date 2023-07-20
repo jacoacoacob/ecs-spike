@@ -88,19 +88,22 @@ function moveCamera(world: World, camera: Camera, keyboard: Keyboard["data"]) {
     const maxTranslationX = cols * (tileSize / SCALE) - viewportWidth;
     const maxTranslationY = rows * (tileSize / SCALE) - viewportHeight;
 
-    if (translation.x + dx >= 0 && translation.x + dx <= maxTranslationX) {
-        camera.components.velocity.dx = dx;
-    }
-    else {
-        camera.components.velocity.dx = 0;
-    }
+    camera.components.velocity.dx = dx;
+    camera.components.velocity.dy = dy;
 
-    if (translation.y + dy >= 0 && translation.y + dy <= maxTranslationY) {
-        camera.components.velocity.dy = dy;
-    }
-    else {
-        camera.components.velocity.dy = 0;
-    }
+    // if (translation.x + dx >= 0 && translation.x + dx <= maxTranslationX) {
+    //     camera.components.velocity.dx = dx;
+    // }
+    // else {
+    //     camera.components.velocity.dx = 0;
+    // }
+
+    // if (translation.y + dy >= 0 && translation.y + dy <= maxTranslationY) {
+    //     camera.components.velocity.dy = dy;
+    // }
+    // else {
+    //     camera.components.velocity.dy = 0;
+    // }
 }
 
 function respondToKeyboardInput({ useResource, getEntityById }: AppSystemParams) {
